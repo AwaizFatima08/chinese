@@ -38,20 +38,19 @@ class ProgressSnapshot {
   int get learnedCount => words.values.where((w) => w.isLearned).length;
   int get masteredCount => words.values.where((w) => w.isMastered).length;
 
-  /// Words due for review today, most overdue first.
+  /// Words due for review today, most overdue first. Shaky words (box 0)
+  /// count too: they are the ones that most need another look.
   List<int> dueWordIds({int? limit}) {
-    final due =
-        words.values.where((w) => w.isLearned && w.dueDay <= today).toList()
-          ..sort((a, b) {
-            final byDue = a.dueDay.compareTo(b.dueDay);
-            return byDue != 0 ? byDue : a.box.compareTo(b.box);
-          });
+    final due = words.values.where((w) => w.dueDay <= today).toList()
+      ..sort((a, b) {
+        final byDue = a.dueDay.compareTo(b.dueDay);
+        return byDue != 0 ? byDue : a.box.compareTo(b.box);
+      });
     final ids = due.map((w) => w.wordId);
     return (limit == null ? ids : ids.take(limit)).toList();
   }
 
-  int get dueCount =>
-      words.values.where((w) => w.isLearned && w.dueDay <= today).length;
+  int get dueCount => words.values.where((w) => w.dueDay <= today).length;
 
   bool isLessonDone(String id) => lessons.containsKey(id);
 }

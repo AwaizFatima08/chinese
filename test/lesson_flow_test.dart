@@ -95,6 +95,15 @@ void main() {
         .result(completed: true);
     expect(result.accuracy, lessThan(1));
     expect(result.outcomes.values.where((o) => o.name == 'shaky').length, 1);
+
+    // The shaky word is not "learned" yet, but it must come back for review.
+    await c.read(progressProvider.notifier).saveSession(result);
+    final p = c.read(progressProvider).value!;
+    expect(p.learnedCount, 6);
+    t.time.now = DateTime(2026, 10, 18, 9);
+    c.invalidate(progressProvider);
+    final tomorrow = await c.read(progressProvider.future);
+    expect(tomorrow.dueCount, 7, reason: 'all seven words, shaky one included');
   });
 
   test('next-day review surfaces the words and moves them up a box', () async {
