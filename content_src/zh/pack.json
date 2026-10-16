@@ -1,0 +1,19 @@
+{
+  "id": "zh",
+  "name": "Chinese (Mandarin)",
+  "nativeName": "中文",
+  "flag": "🇨🇳",
+  "script": "hanzi",
+  "romanizationLabel": "Pinyin",
+  "ttsLocale": "zh-CN",
+  "sttLocale": "zh_CN",
+  "hasTones": true,
+  "hasStrokeWriting": true,
+  "levelLabel": "HSK",
+  "attribution": [
+    {"name": "complete-hsk-vocabulary", "license": "MIT", "url": "https://github.com/drkameleon/complete-hsk-vocabulary", "use": "HSK word lists, pinyin"},
+    {"name": "CC-CEDICT", "license": "CC BY-SA 4.0", "url": "https://cc-cedict.org", "use": "English meanings"},
+    {"name": "Tatoeba", "license": "CC BY 2.0 FR", "url": "https://tatoeba.org", "use": "Example sentences"},
+    {"name": "Make Me a Hanzi", "license": "Arphic Public License / LGPL", "url": "https://github.com/skishore/makemeahanzi", "use": "Stroke order data"}
+  ]
+}

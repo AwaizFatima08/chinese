@@ -1,0 +1,48 @@
+name: lingodaily
+description: "LingoDaily - learn Chinese (HSK 1-6) by listening, speaking, reading and writing in 15 minutes a day. Built to host more languages."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  intl: any
+
+  flutter_riverpod: any
+  go_router: any
+  sqflite: any
+  path: ^1.9.1
+  shared_preferences: any
+  clock: ^1.1.2
+
+  flutter_tts: any
+  speech_to_text: any
+  path_drawing: any
+  google_mobile_ads: any
+  url_launcher: any
+  package_info_plus: any
+  android_intent_plus: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: any
+  sqflite_common_ffi: any
+
+flutter:
+  uses-material-design: true
+  generate: true
+  assets:
+    - assets/content/languages.json
+    - assets/content/zh/pack.json
+    - assets/content/zh/vocab.json
+    - assets/content/zh/sentences.json
+    - assets/content/zh/grammar.json
+    - assets/content/zh/levels/
+    - assets/content/zh/strokes/
+    - assets/licenses/

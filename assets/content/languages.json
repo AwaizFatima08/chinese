@@ -1,0 +1,9 @@
+{
+  "available": ["zh"],
+  "comingSoon": [
+    {"id": "ja", "name": "Japanese", "nativeName": "日本語", "flag": "🇯🇵"},
+    {"id": "ko", "name": "Korean", "nativeName": "한국어", "flag": "🇰🇷"},
+    {"id": "ar", "name": "Arabic", "nativeName": "العربية", "flag": "🇸🇦"},
+    {"id": "es", "name": "Spanish", "nativeName": "Español", "flag": "🇪🇸"}
+  ]
+}

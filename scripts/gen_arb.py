@@ -1,0 +1,208 @@
+#!/usr/bin/env python3
+"""Generates lib/l10n/app_en.arb from the table below.
+
+Keeping the strings in one readable table makes review and translation easy.
+Placeholders: {name} with an optional type, e.g. n:int.
+"""
+import json, os, re
+
+S = [
+ ("appName", "LingoDaily", {}),
+ # navigation
+ ("navToday", "Today", {}), ("navPath", "Path", {}), ("navProgress", "Progress", {}), ("navSettings", "Settings", {}),
+ # common
+ ("commonContinue", "Continue", {}), ("commonCancel", "Cancel", {}), ("commonClose", "Close", {}), ("commonNext", "Next", {}), ("commonBack", "Back", {}),
+ ("commonSkip", "Skip", {}), ("commonDone", "Done", {}), ("commonOk", "OK", {}), ("commonLoading", "Getting things ready…", {}),
+ ("commonError", "Something went wrong. Please try again.", {}), ("commonRetry", "Try again", {}),
+ ("commonMinutes", "{n, plural, =1{1 min} other{{n} min}}", {"n": "int"}),
+ ("commonMinutesLong", "{n, plural, =1{1 minute} other{{n} minutes}}", {"n": "int"}),
+ ("commonWords", "{n, plural, =1{1 word} other{{n} words}}", {"n": "int"}),
+ # onboarding
+ ("onbWelcomeTitle", "Learn a language in 15 minutes a day", {}),
+ ("onbWelcomeBody", "Short lessons, a teacher's voice, and real writing practice. Listen, speak, read and write your way from beginner to confident.", {}),
+ ("onbGetStarted", "Get started", {}),
+ ("onbLanguageTitle", "What do you want to learn?", {}),
+ ("onbComingSoon", "Coming soon", {}),
+ ("onbLevelTitle", "Where do you want to start?", {}),
+ ("onbLevelBeginner", "Complete beginner", {}),
+ ("onbLevelBeginnerBody", "Start with the very first words", {}),
+ ("onbGoalTitle", "Pick a daily goal", {}),
+ ("onbGoalBody", "Small steps win. Even 5 minutes keeps your streak alive.", {}),
+ ("onbVoiceTitle", "Your teacher's voice", {}),
+ ("onbVoiceReady", "The teacher voice is ready.", {}),
+ ("onbVoiceMissing", "Your phone has no voice for this language yet. Open your phone's Settings, search for \"Text-to-speech output\", and install the voice data. Without it you can still learn, but you will not hear the words.", {}),
+ ("onbVoiceTest", "Hear a sample", {}),
+ ("voiceOpenSettings", "Open voice settings", {}),
+ ("voiceCheckAgain", "Check again", {}),
+ ("voiceInstallHint", "In voice settings, choose the Google engine, open Install voice data and download your language. Then come back here.", {}),
+ ("onbStart", "Start learning", {}),
+ # home
+ ("homeTitle", "Today", {}),
+ ("homeGoalTitle", "Today's goal", {}),
+ ("homeGoalProgress", "{done} of {goal} min", {"done": "int", "goal": "int"}),
+ ("homeGoalDone", "Daily goal reached. Great work!", {}),
+ ("homeGoalDoneBody", "Come back tomorrow, or keep going if you like.", {}),
+ ("homeStreak", "{n, plural, =0{No streak} =1{1 day streak} other{{n} day streak}}", {"n": "int"}),
+ ("homeReviewTitle", "Warm-up review", {}),
+ ("homeReviewBody", "{n, plural, =1{1 word is ready to refresh} other{{n} words are ready to refresh}}", {"n": "int"}),
+ ("homeReviewNone", "Nothing to review yet. New words appear here after your first lesson.", {}),
+ ("homeReviewStart", "Review", {}),
+ ("homeNextTitle", "Next lesson", {}),
+ ("homeStartLesson", "Start", {}),
+ ("homeLevelDone", "You finished this level!", {}),
+ ("homeLevelDoneBody", "Pick the next level in the Path tab whenever you are ready.", {}),
+ ("homePlanTitle", "Your 15-minute plan", {}),
+ ("homeRepairTitle", "Save your streak", {}),
+ ("homeRepairBody", "You missed a day. Watch a short video to keep your streak going.", {}),
+ ("homeRepairButton", "Watch video", {}),
+ ("homeRepairNoVideo", "No video is available right now. Please try again later.", {}),
+ ("homeRepairDone", "Streak saved!", {}),
+ ("homeVoiceBanner", "No teacher voice found on this phone. Tap to set it up.", {}),
+ # path
+ ("pathTitle", "Learning path", {}),
+ ("pathLevelProgress", "{done} of {total} lessons", {"done": "int", "total": "int"}),
+ ("pathLessonWords", "Words", {}), ("pathLessonGrammar", "Grammar", {}), ("pathLessonCheckpoint", "Checkpoint", {}),
+ ("pathAbout", "About {n} minutes", {"n": "int"}),
+ ("pathLocked", "Finish the lesson before this one to open it.", {}),
+ ("pathStartLesson", "Start lesson", {}),
+ ("pathRedo", "Practise again", {}),
+ ("pathNewWords", "New words", {}),
+ ("pathGrammarPoints", "Grammar points", {}),
+ ("pathCheckpointBody", "A short review of this unit's words.", {}),
+ ("pathStars", "{n, plural, =0{Not completed} =1{1 star} other{{n} stars}}", {"n": "int"}),
+ # lesson runner
+ ("lessonLeaveTitle", "Leave this lesson?", {}),
+ ("lessonLeaveBody", "The words you already met are saved.", {}),
+ ("lessonStay", "Keep going", {}), ("lessonLeave", "Leave", {}),
+ ("lessonCheck", "Check", {}),
+ ("lessonCorrect", "Correct!", {}), ("lessonIncorrect", "Not quite", {}),
+ ("lessonAnswerIs", "Answer: {answer}", {"answer": "String"}),
+ ("lessonRetryLater", "We will ask this one again.", {}),
+ ("phaseMeet", "Meet the words", {}), ("phaseRecall", "Recall", {}), ("phaseSpeak", "Speak", {}),
+ ("phaseWrite", "Write", {}), ("phaseSentences", "Sentences", {}), ("phaseGrammar", "Grammar", {}), ("phaseReview", "Review", {}),
+ ("lessonDoneTitle", "Lesson complete!", {}),
+ ("reviewDoneTitle", "Review complete!", {}),
+ ("lessonDoneWords", "{n, plural, =1{1 word practised} other{{n} words practised}}", {"n": "int"}),
+ ("lessonDoneAccuracy", "{n}% right first time", {"n": "int"}),
+ ("lessonDoneTime", "{n, plural, =0{Under a minute} =1{1 minute} other{{n} minutes}}", {"n": "int"}),
+ ("lessonDoneNext", "Next lesson", {}),
+ ("lessonDoneHome", "Back to Today", {}),
+ ("lessonNudgeTitle", "You have studied 15 minutes", {}),
+ ("lessonNudgeBody", "That is a full day's practice. Finish here and come back tomorrow, or keep going.", {}),
+ ("lessonNudgeFinish", "Finish now", {}), ("lessonNudgeKeep", "Keep going", {}),
+ # exercises
+ ("exListenChoose", "Listen. What does it mean?", {}),
+ ("exReadChoose", "What does this mean?", {}),
+ ("exMeaningChoose", "Which word means this?", {}),
+ ("exListenWord", "Listen. Which word did you hear?", {}),
+ ("exListenRoman", "Listen. Which {label} did you hear?", {"label": "String"}),
+ ("exTapListen", "Tap to listen", {}),
+ ("exListenSlow", "Slow", {}), ("exListenNormal", "Listen", {}),
+ ("exMeaning", "Meaning", {}), ("exExample", "Example", {}),
+ ("exShowRoman", "Tap to show {label}", {"label": "String"}),
+ ("exSayIt", "Say it aloud", {}),
+ ("exTapSpeak", "Tap and speak", {}),
+ ("exListening", "Listening…", {}),
+ ("exHeard", "Heard: {text}", {"text": "String"}),
+ ("exSpokenGreat", "Great pronunciation!", {}),
+ ("exSpokenTone", "Right sounds. Check the tone and try again.", {}),
+ ("exSpokenMiss", "Not quite. Listen and try again.", {}),
+ ("exSpokenNothing", "I did not hear anything. Try again.", {}),
+ ("exSelfCheckBody", "Speech check is not available on this phone. Listen, say it aloud, then tap below.", {}),
+ ("exSelfCheckDone", "I said it", {}),
+ ("exMicDenied", "Microphone access is off. You can turn it on in your phone's app settings.", {}),
+ ("exWriteTitle", "Write this character", {}),
+ ("exWatch", "Watch", {}), ("exHint", "Hint", {}), ("exClear", "Start over", {}),
+ ("exTraceBody", "Draw each stroke in order, starting from the dot.", {}),
+ ("exStrokeCount", "Stroke {i} of {n}", {"i": "int", "n": "int"}),
+ ("exWriteDone", "Nicely written!", {}),
+ ("exWriteNoData", "No writing guide for this character.", {}),
+ ("exOrderTitle", "Put the words in order", {}),
+ ("exOrderTranslate", "Say it in the new language:", {}),
+ ("exOrderTap", "Tap the words below", {}),
+ ("exGrammarPattern", "Pattern", {}), ("exGrammarExamples", "Examples", {}), ("exGrammarGotIt", "Got it", {}),
+ ("exShadowTitle", "Listen, then say it", {}),
+ ("exShadowDone", "Well done!", {}),
+ ("exQuizQuestion", "Check yourself", {}),
+ # progress
+ ("progTitle", "Your progress", {}),
+ ("progStreak", "Streak", {}), ("progStreakDays", "{n, plural, =1{1 day} other{{n} days}}", {"n": "int"}),
+ ("progTotalTime", "Time studied", {}),
+ ("progTimeValue", "{h}h {m}m", {"h": "int", "m": "int"}),
+ ("progWordsLearned", "Words learned", {}), ("progWordsMastered", "Mastered", {}),
+ ("progCharsWritten", "Characters written", {}),
+ ("progWeek", "This week", {}),
+ ("progLevels", "Levels", {}),
+ ("progBrowse", "Browse all words", {}),
+ ("progDue", "Due for review", {}),
+ # words
+ ("wordsTitle", "Words", {}),
+ ("wordsSearch", "Search by word, {label} or English", {"label": "String"}),
+ ("wordsAll", "All", {}), ("wordsNone", "No words match your search.", {}),
+ ("wordsLearnedBadge", "Learned", {}),
+ ("wordsMoreMeanings", "More meanings", {}),
+ ("wordsExamples", "Examples", {}),
+ ("wordsStrokes", "Stroke order", {}),
+ # settings
+ ("setTitle", "Settings", {}),
+ ("setLearning", "Learning", {}),
+ ("setLanguage", "Language", {}),
+ ("setLevel", "Current level", {}),
+ ("setDailyGoal", "Daily goal", {}),
+ ("setDailyGoalBody", "Never more than 15 minutes.", {}),
+ ("setVoice", "Voice", {}),
+ ("setSlow", "Slow teacher voice", {}), ("setSlowBody", "Speak new words more slowly.", {}),
+ ("setAutoPlay", "Speak words automatically", {}),
+ ("setVoiceTest", "Test the teacher voice", {}),
+ ("setVoiceNone", "No voice found for this language on your phone.", {}),
+ ("setDisplay", "Display", {}),
+ ("setRoman", "Show {label}", {"label": "String"}),
+ ("setRomanAlways", "Always", {}), ("setRomanTap", "Tap to reveal", {}), ("setRomanHidden", "Hidden", {}),
+ ("setToneColors", "Colour the tones", {}), ("setToneColorsBody", "Each tone gets its own colour. The marks are always shown too.", {}),
+ ("setHaptics", "Vibration feedback", {}),
+ ("setPath", "Path", {}),
+ ("setUnlockAll", "Open all lessons", {}), ("setUnlockAllBody", "Skip the lesson order and start anywhere.", {}),
+ ("setPrivacy", "Ads and privacy", {}),
+ ("setPrivacyOptions", "Ad privacy choices", {}),
+ ("setAbout", "About and credits", {}),
+ ("setData", "Your data", {}),
+ ("setResetLanguage", "Reset progress for this language", {}),
+ ("setResetConfirmTitle", "Reset progress?", {}),
+ ("setResetConfirmBody", "This clears your lessons and review schedule for this language. It cannot be undone.", {}),
+ ("setResetConfirm", "Reset", {}),
+ ("setResetDone", "Progress reset.", {}),
+ ("setMoreLanguages", "More languages are coming", {}),
+ # about
+ ("aboutTitle", "About", {}),
+ ("aboutVersion", "Version {v}", {"v": "String"}),
+ ("aboutBody", "LingoDaily helps you learn a language in short daily sessions: listen, speak, read and write.", {}),
+ ("aboutAds", "The app is free and supported by ads. You can change your ad choices in Settings.", {}),
+ ("aboutCredits", "Data credits", {}),
+ ("aboutLicenceText", "View licence text", {}),
+ ("aboutOpenLicences", "Open-source licences", {}),
+ ("aboutLink", "Open link", {}),
+]
+
+def main():
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    out = {"@@locale": "en"}
+    for key, text, ph in S:
+        out[key] = text
+        names = re.findall(r"\{(\w+)(?:,|\})", text)
+        used = {}
+        for n in names:
+            if n in ph or n.isidentifier():
+                used[n] = ph.get(n, "String")
+        if used:
+            out["@" + key] = {"placeholders": {n: {"type": t} for n, t in used.items()}}
+    # ICU plural variable also appears inside nested braces as {n}; make sure declared types are int for plurals.
+    for key, text, ph in S:
+        if "plural," in text and ("@" + key) in out:
+            for n in re.findall(r"\{(\w+), plural", text):
+                out["@" + key]["placeholders"][n] = {"type": "int"}
+    path = os.path.join(root, "lib", "l10n", "app_en.arb")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=2)
+    print(f"wrote {len(S)} strings to {path}")
+
+main()
