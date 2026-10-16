@@ -53,11 +53,13 @@ class FeedbackBar extends StatelessWidget {
                     color: fg,
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    title,
-                    style: context.text.titleLarge?.copyWith(
-                      color: fg,
-                      fontWeight: FontWeight.w800,
+                  Flexible(
+                    child: Text(
+                      title,
+                      style: context.text.titleLarge?.copyWith(
+                        color: fg,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ],

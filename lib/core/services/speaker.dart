@@ -45,18 +45,10 @@ class DeviceSpeaker implements Speaker {
     _locale = locale;
     try {
       await _tts.awaitSpeakCompletion(true);
-      final available = await _tts.isLanguageAvailable(locale);
-      _hasVoice = available == true || available == 1;
-      if (kDebugMode) {
-        final engine = await _tts.getDefaultEngine;
-        final langs = await _tts.getLanguages;
-        debugPrint(
-          'TTS engine=$engine locale=$locale available=$available '
-          'zh-voices=${(langs as List<dynamic>).where((l) => '$l'.toLowerCase().startsWith('zh')).toList()}',
-        );
-      }
       await _tts.setVolume(1);
       await _tts.setPitch(1);
+      _hasVoice = await _isAvailable(locale);
+      if (!_hasVoice) _hasVoice = await _tryOtherEngines(locale);
       _ready = true;
     } on Object catch (e) {
       debugPrint('TTS init failed: $e');
@@ -64,6 +56,44 @@ class DeviceSpeaker implements Speaker {
       _hasVoice = false;
     }
     return _hasVoice;
+  }
+
+  Future<bool> _isAvailable(String locale) async {
+    final available = await _tts.isLanguageAvailable(locale);
+    return available == true || available == 1;
+  }
+
+  /// The default engine may lack the language (Samsung's often does) while
+  /// another installed engine, usually Google's, has it. Try each in turn
+  /// and keep the first that can speak [locale].
+  Future<bool> _tryOtherEngines(String locale) async {
+    final defaultEngine = await _tts.getDefaultEngine as String?;
+    final installed =
+        [for (final e in await _tts.getEngines as List<dynamic>) '$e']
+          ..sort((a, b) {
+            // Google's engine first: it has the widest language support.
+            int rank(String x) => x == 'com.google.android.tts' ? 0 : 1;
+            return rank(a).compareTo(rank(b));
+          });
+    for (final engine in installed) {
+      if (engine == defaultEngine) continue;
+      try {
+        await _tts.setEngine(engine);
+        _active = null;
+        await _tts.awaitSpeakCompletion(true);
+        final ok = await _isAvailable(locale);
+        if (kDebugMode) debugPrint('TTS engine $engine has $locale: $ok');
+        if (ok) return true;
+      } on Object catch (e) {
+        debugPrint('TTS engine $engine failed: $e');
+      }
+    }
+    if (defaultEngine != null) {
+      await _tts.setEngine(defaultEngine);
+      _active = null;
+      await _tts.awaitSpeakCompletion(true);
+    }
+    return false;
   }
 
   Future<void> _say(String text, String locale, double rate) async {

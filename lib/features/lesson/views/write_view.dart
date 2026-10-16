@@ -139,29 +139,25 @@ class _WriteViewState extends ConsumerState<WriteView> {
           Row(
             children: [
               Expanded(
-                child: OutlinedButton.icon(
+                child: _ToolButton(
+                  icon: Icons.play_arrow_rounded,
+                  label: l.exWatch,
                   onPressed: _controller.watch,
-                  icon: const Icon(Icons.play_arrow_rounded),
-                  label: Text(l.exWatch),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(0, 48),
-                  ),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: OutlinedButton.icon(
+                child: _ToolButton(
+                  icon: Icons.lightbulb_outline_rounded,
+                  label: l.exHint,
                   onPressed: _finished ? null : _controller.hint,
-                  icon: const Icon(Icons.lightbulb_outline_rounded),
-                  label: Text(l.exHint),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(0, 48),
-                  ),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: OutlinedButton.icon(
+                child: _ToolButton(
+                  icon: Icons.refresh_rounded,
+                  label: l.exClear,
                   onPressed: () {
                     _controller.reset();
                     setState(() {
@@ -169,14 +165,48 @@ class _WriteViewState extends ConsumerState<WriteView> {
                       _finished = false;
                     });
                   },
-                  icon: const Icon(Icons.refresh_rounded),
-                  label: Text(l.exClear),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(0, 48),
-                  ),
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// An icon over a one-line label; stays tidy at large font sizes.
+class _ToolButton extends StatelessWidget {
+  const _ToolButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(0, 60),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 22),
+          const SizedBox(height: 2),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              maxLines: 1,
+              style: const TextStyle(fontSize: 14),
+            ),
           ),
         ],
       ),

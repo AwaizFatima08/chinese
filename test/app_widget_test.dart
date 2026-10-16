@@ -35,7 +35,7 @@ void main() {
     await tester.tap(find.text('Get started'));
     await tester.pumpAndSettle();
     expect(find.text('What do you want to learn?'), findsOneWidget);
-    expect(find.text('Coming soon'), findsWidgets);
+    expect(find.textContaining('Coming soon'), findsWidgets);
     for (final _ in [1, 2, 3]) {
       await tester.tap(find.text('Next'));
       await tester.pumpAndSettle();
@@ -46,21 +46,10 @@ void main() {
     expect(find.text('Today'), findsWidgets);
   });
 
-  testWidgets('a whole lesson can be played through the UI', (tester) async {
-    tester.view.physicalSize = const Size(720, 1600);
-    tester.view.devicePixelRatio = 2;
-    addTearDown(tester.view.reset);
-    final t = await makeContainer();
-    addTearDown(t.container.dispose);
-    await pumpApp(tester, t.container);
-
-    expect(find.text("Today's goal"), findsOneWidget);
-    expect(find.text('Lesson 1'), findsOneWidget);
-    await tester.tap(find.text('Start'));
-    await tester.pump(const Duration(milliseconds: 500));
-
+  /// Plays the open lesson to the end by tapping whatever the screen asks for.
+  Future<void> playLesson(WidgetTester tester) async {
     var guard = 0;
-    while (find.text('Lesson complete!').evaluate().isEmpty && guard++ < 120) {
+    while (find.text('Lesson complete!').evaluate().isEmpty && guard++ < 160) {
       await tester.pump(const Duration(milliseconds: 300));
       if (find.text('Lesson complete!').evaluate().isNotEmpty) break;
 
@@ -94,7 +83,6 @@ void main() {
       } else if (skip.evaluate().isNotEmpty) {
         await tester.tap(skip.first);
       } else {
-        // A choice question: tap the first option.
         final options = find.byType(OptionButton);
         if (options.evaluate().isNotEmpty) {
           await tester.tap(options.first, warnIfMissed: false);
@@ -114,7 +102,59 @@ void main() {
       () => Future<void>.delayed(const Duration(milliseconds: 200)),
     );
     await tester.pump();
+  }
+
+  void setScreen(
+    WidgetTester tester, {
+    required double w,
+    required double h,
+    double textScale = 1,
+  }) {
+    tester.view.physicalSize = Size(w * 2, h * 2);
+    tester.view.devicePixelRatio = 2;
+    tester.platformDispatcher.textScaleFactorTestValue = textScale;
+    addTearDown(() {
+      tester.view.reset();
+      tester.platformDispatcher.clearTextScaleFactorTestValue();
+    });
+  }
+
+  testWidgets('a whole lesson can be played through the UI', (tester) async {
+    setScreen(tester, w: 360, h: 800);
+    final t = await makeContainer();
+    addTearDown(t.container.dispose);
+    await pumpApp(tester, t.container);
+
+    expect(find.text("Today's goal"), findsOneWidget);
+    expect(find.text('Lesson 1'), findsOneWidget);
+    await tester.tap(find.text('Start'));
+    await tester.pump(const Duration(milliseconds: 500));
+    await playLesson(tester);
     final p = t.container.read(progressProvider).value!;
     expect(p.isLessonDone('zh-hsk1-u01-l01'), isTrue);
+  });
+
+  // The Samsung A12 test phone: about 339 dp wide, 1.3x font. Any overflow
+  // raises a test error, so this guards the layouts that broke before.
+  testWidgets('every tab and a full lesson fit a small phone with large text', (
+    tester,
+  ) async {
+    setScreen(tester, w: 339, h: 705, textScale: 1.3);
+    final t = await makeContainer();
+    addTearDown(t.container.dispose);
+    await pumpApp(tester, t.container);
+
+    for (final tab in ['Path', 'Progress', 'Settings', 'Today']) {
+      await tester.tap(find.widgetWithText(NavigationDestination, tab));
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pump(const Duration(milliseconds: 400));
+    }
+    expect(find.text("Today's goal"), findsOneWidget);
+    // The primary action must be visible without scrolling, above the nav bar.
+    final start = tester.getCenter(find.text('Start'));
+    expect(start.dy, lessThan(705 - 90), reason: 'Start hidden: $start');
+    await tester.tap(find.text('Start'));
+    await tester.pump(const Duration(milliseconds: 500));
+    await playLesson(tester);
   });
 }

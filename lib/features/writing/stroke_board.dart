@@ -285,8 +285,6 @@ class _BoardPainter extends CustomPainter {
   final Color error;
   final Animation<double> anim;
 
-  static const _box = Rect.fromLTWH(0, 0, 1024, 1024);
-
   @override
   void paint(Canvas canvas, Size size) {
     canvas
@@ -341,30 +339,27 @@ class _BoardPainter extends CustomPainter {
     for (final p in median.skip(1)) {
       path.lineTo(p.dx, p.dy);
     }
-    final metrics = path.computeMetrics().toList();
-    if (metrics.isEmpty) return;
+    // Reveal the outline only where the pen has already passed: clip to a
+    // chain of discs laid along the centre-line up to the pen position.
     final reveal = Path();
-    for (final m in metrics) {
-      reveal.addPath(m.extractPath(0, m.length * t), Offset.zero);
+    for (final m in path.computeMetrics()) {
+      final end = m.length * t;
+      for (var d = 0.0; d <= end; d += 14) {
+        final tangent = m.getTangentForOffset(d);
+        if (tangent != null) {
+          reveal.addOval(Rect.fromCircle(center: tangent.position, radius: 95));
+        }
+      }
+      final tip = m.getTangentForOffset(end);
+      if (tip != null) {
+        reveal.addOval(Rect.fromCircle(center: tip.position, radius: 95));
+      }
     }
-    // Reveal the outline only where the pen has already passed.
-    canvas.saveLayer(_box, Paint());
-    canvas.drawPath(
-      reveal,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 190
-        ..strokeCap = StrokeCap.round
-        ..strokeJoin = StrokeJoin.round
-        ..color = Colors.black,
-    );
-    canvas.drawPath(
-      glyph.outlines[index],
-      Paint()
-        ..color = color
-        ..blendMode = BlendMode.srcIn,
-    );
-    canvas.restore();
+    canvas
+      ..save()
+      ..clipPath(reveal)
+      ..drawPath(glyph.outlines[index], Paint()..color = color)
+      ..restore();
     // A dot marks where this stroke begins.
     canvas.drawCircle(
       median.first,

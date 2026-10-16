@@ -210,110 +210,139 @@ class _SpeakPracticeState extends ConsumerState<_SpeakPractice> {
         ref.watch(contentProvider).asData?.value.pack.romanizationLabel ?? '';
     final listening = _mode == _Mode.listening;
     final isSentence = widget.numeric == null;
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+    final status = _statusLines(context);
+    return Column(
       children: [
-        Text(
-          widget.title,
-          textAlign: TextAlign.center,
-          style: context.text.titleMedium?.copyWith(
-            color: scheme.onSurfaceVariant,
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 4, 20, 8),
+            children: [
+              Text(
+                widget.title,
+                textAlign: TextAlign.center,
+                style: context.text.titleMedium?.copyWith(
+                  color: scheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+                  child: Column(
+                    children: [
+                      ToneScript(
+                        widget.text,
+                        romanization: isSentence ? null : widget.romanization,
+                        style: TextStyle(
+                          fontSize: isSentence ? 28 : 56,
+                          height: 1.2,
+                        ),
+                      ),
+                      RomanText(
+                        widget.romanization,
+                        revealLabel: l.exShowRoman(label),
+                        style: TextStyle(
+                          fontSize: isSentence ? 16 : 22,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        widget.translation,
+                        textAlign: TextAlign.center,
+                        style: context.text.titleSmall,
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SpeakButton(
+                            text: widget.text,
+                            size: 48,
+                            label: l.exListenNormal,
+                          ),
+                          const SizedBox(width: 24),
+                          SpeakButton(
+                            text: widget.text,
+                            slow: true,
+                            size: 48,
+                            label: l.exListenSlow,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 16),
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                ToneScript(
-                  widget.text,
-                  romanization: isSentence ? null : widget.romanization,
-                  style: TextStyle(
-                    fontSize: isSentence ? 30 : 64,
-                    height: 1.25,
-                  ),
-                ),
-                RomanText(
-                  widget.romanization,
-                  revealLabel: l.exShowRoman(label),
-                  style: TextStyle(
-                    fontSize: isSentence ? 17 : 24,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+          child: Column(
+            children: [
+              if (_mode == _Mode.selfCheck) ...[
                 Text(
-                  widget.translation,
+                  l.exSelfCheckBody,
                   textAlign: TextAlign.center,
-                  style: context.text.titleMedium,
+                  style: context.text.bodyMedium,
                 ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SpeakButton(text: widget.text, label: l.exListenNormal),
-                    const SizedBox(width: 24),
-                    SpeakButton(
-                      text: widget.text,
-                      slow: true,
-                      label: l.exListenSlow,
-                    ),
-                  ],
+                const SizedBox(height: 12),
+                FilledButton.icon(
+                  onPressed: () => widget.onAnswered(true),
+                  icon: const Icon(Icons.record_voice_over_rounded),
+                  label: Text(l.exSelfCheckDone),
+                ),
+              ] else if (_mode == _Mode.preparing)
+                const Center(child: CircularProgressIndicator())
+              else ...[
+                // What was heard and how it went sit above the mic so they are
+                // never pushed off-screen on short displays.
+                if (status.isNotEmpty) ...[
+                  ...status,
+                  const SizedBox(height: 8),
+                ],
+                Center(
+                  child: _MicButton(
+                    listening: listening,
+                    passed: _mode == _Mode.passed,
+                    onPressed: listening || _mode == _Mode.passed
+                        ? null
+                        : _listen,
+                    label: listening ? l.exListening : l.exTapSpeak,
+                  ),
                 ),
               ],
-            ),
+            ],
           ),
         ),
-        const SizedBox(height: 28),
-        if (_mode == _Mode.selfCheck) ...[
-          Text(
-            l.exSelfCheckBody,
-            textAlign: TextAlign.center,
-            style: context.text.bodyMedium,
-          ),
-          const SizedBox(height: 16),
-          FilledButton.icon(
-            onPressed: () => widget.onAnswered(true),
-            icon: const Icon(Icons.record_voice_over_rounded),
-            label: Text(l.exSelfCheckDone),
-          ),
-        ] else if (_mode == _Mode.preparing)
-          const Center(child: CircularProgressIndicator())
-        else ...[
-          Center(
-            child: _MicButton(
-              listening: listening,
-              passed: _mode == _Mode.passed,
-              onPressed: listening || _mode == _Mode.passed ? null : _listen,
-              label: listening ? l.exListening : l.exTapSpeak,
-            ),
-          ),
-          const SizedBox(height: 16),
-          if (_heard.isNotEmpty)
-            Text(
-              l.exHeard(_heard),
-              textAlign: TextAlign.center,
-              style: context.text.bodyLarge?.copyWith(
-                color: scheme.onSurfaceVariant,
-              ),
-            ),
-          if (_message != null) ...[
-            const SizedBox(height: 8),
-            Text(
-              _message!,
-              textAlign: TextAlign.center,
-              style: context.text.titleMedium?.copyWith(
-                color: _messageIsGood
-                    ? context.appColors.success
-                    : scheme.error,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ],
       ],
     );
+  }
+
+  List<Widget> _statusLines(BuildContext context) {
+    final l = context.l10n;
+    return [
+      if (_heard.isNotEmpty)
+        Text(
+          l.exHeard(_heard),
+          textAlign: TextAlign.center,
+          style: context.text.bodyLarge?.copyWith(
+            color: context.scheme.onSurfaceVariant,
+          ),
+        ),
+      if (_message != null)
+        Text(
+          _message!,
+          textAlign: TextAlign.center,
+          style: context.text.titleMedium?.copyWith(
+            color: _messageIsGood
+                ? context.appColors.success
+                : context.scheme.error,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+    ];
   }
 }
 
@@ -378,20 +407,20 @@ class _MicButtonState extends State<_MicButton>
             child: child,
           ),
           child: SizedBox.square(
-            dimension: 88,
+            dimension: 76,
             child: FilledButton(
               onPressed: widget.onPressed,
               style: FilledButton.styleFrom(
                 shape: const CircleBorder(),
                 padding: EdgeInsets.zero,
-                minimumSize: const Size.square(88),
+                minimumSize: const Size.square(76),
                 backgroundColor: bg,
                 disabledBackgroundColor: bg,
                 disabledForegroundColor: Colors.white,
               ),
               child: Icon(
                 widget.passed ? Icons.check_rounded : Icons.mic_rounded,
-                size: 44,
+                size: 38,
               ),
             ),
           ),

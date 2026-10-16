@@ -47,7 +47,7 @@ class HomeScreen extends ConsumerWidget {
     return SafeArea(
       bottom: false,
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
         children: [
           Row(
             children: [
@@ -64,14 +64,6 @@ class HomeScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 12),
           _GoalCard(doneMinutes: doneMinutes, goalMinutes: goal),
-          if (voiceMissing) ...[
-            const SizedBox(height: 12),
-            _Banner(
-              icon: Icons.volume_off_rounded,
-              text: l.homeVoiceBanner,
-              onTap: openVoiceSettings,
-            ),
-          ],
           if (p.repairDay >= 0) ...[
             const SizedBox(height: 12),
             _RepairCard(day: p.repairDay),
@@ -106,6 +98,14 @@ class HomeScreen extends ConsumerWidget {
             ),
           const SizedBox(height: 12),
           _ReviewCard(due: p.dueCount, doneToday: p.todayLog.reviews > 0),
+          if (voiceMissing) ...[
+            const SizedBox(height: 12),
+            _Banner(
+              icon: Icons.volume_off_rounded,
+              text: l.homeVoiceBanner(c.pack.name),
+              onTap: openVoiceSettings,
+            ),
+          ],
         ],
       ),
     );
@@ -373,7 +373,7 @@ class _LessonCard extends StatelessWidget {
         side: BorderSide.none,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -400,10 +400,10 @@ class _LessonCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Text(
               lesson.title,
-              style: context.text.headlineSmall?.copyWith(
+              style: context.text.titleLarge?.copyWith(
                 color: scheme.onPrimaryContainer,
                 fontWeight: FontWeight.w800,
               ),
@@ -415,7 +415,7 @@ class _LessonCard extends StatelessWidget {
                 color: scheme.onPrimaryContainer,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             FilledButton(
               onPressed: () => context.push('/lesson/${lesson.id}'),
               child: Text(l.homeStartLesson),

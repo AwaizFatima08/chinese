@@ -1,17 +1,25 @@
-# lingodaily
+# LingoDaily
 
-A new Flutter project.
+Learn Chinese (HSK 1–6) on Android in **15 minutes a day** by listening, speaking, reading and writing. Built to host more languages.
 
-## Getting Started
+## What it does
+- **Short daily plan.** Each lesson is a chain of 5–60 second steps and takes 4–11 minutes. The Today screen shows one next lesson plus a spaced-repetition warm-up. At 15 minutes studied the app suggests stopping.
+- **Verbal teaching.** A teacher voice (device text-to-speech) says each word, its meaning and an example; learners repeat and are checked by speech recognition, judged by sound and tone.
+- **Written language.** Stroke-order demonstrations and finger tracing for every character in HSK 1–6 (2,600+ characters).
+- **Full path.** 4,991 HSK 2.0 words, 2,000+ example sentences, 62 grammar points, 700+ lessons across six levels, unit checkpoints, spaced-repetition review.
+- **Ads.** AdMob banner on the main tabs, an interstitial only between lessons (rarely), and a rewarded video to save a broken streak.
+- **More languages later.** Content lives in language packs: see `docs/add-a-language.md`.
 
-This project is a starting point for a Flutter application.
+## Run it
+```bash
+flutter pub get
+flutter run            # debug build with Google test ads
+flutter test           # 50 tests, including a lesson played through the UI
+```
+Rebuild content: `bash scripts/fetch_sources.sh && python3 scripts/build_content.py`.
 
-A few resources to get you started if this is your first Flutter project:
+## Docs
+`CLAUDE.md` (project guide) · `docs/add-a-language.md` · `docs/ads.md` · `docs/release.md`
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Data credits
+Word lists: complete-hsk-vocabulary (MIT). Meanings: CC-CEDICT (CC BY-SA 4.0). Sentences: Tatoeba (CC BY 2.0 FR). Stroke data: Make Me a Hanzi (Arphic Public License / LGPL). Shown in the app's About screen; texts in `assets/licenses/`.

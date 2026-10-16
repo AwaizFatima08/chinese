@@ -57,7 +57,7 @@ S = [
  ("homeRepairButton", "Watch video", {}),
  ("homeRepairNoVideo", "No video is available right now. Please try again later.", {}),
  ("homeRepairDone", "Streak saved!", {}),
- ("homeVoiceBanner", "No teacher voice found on this phone. Tap to set it up.", {}),
+ ("homeVoiceBanner", "No {language} voice on this phone yet. Tap to set it up.", {"language": "String"}),
  # path
  ("pathTitle", "Learning path", {}),
  ("pathLevelProgress", "{done} of {total} lessons", {"done": "int", "total": "int"}),

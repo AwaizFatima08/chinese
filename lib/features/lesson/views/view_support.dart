@@ -84,7 +84,9 @@ class OptionButton extends StatelessWidget {
         : scheme.error;
     return Semantics(
       button: true,
-      label: label,
+      enabled: onTap != null,
+      onTap: onTap,
+      label: sublabel == null ? label : '$label, $sublabel',
       excludeSemantics: true,
       child: Material(
         color: bg,

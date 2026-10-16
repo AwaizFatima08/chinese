@@ -201,7 +201,7 @@ class _Stat extends StatelessWidget {
       children: [
         Icon(icon, size: 20, color: context.scheme.primary),
         const SizedBox(width: 6),
-        Text(text, style: context.text.titleSmall),
+        Flexible(child: Text(text, style: context.text.titleSmall)),
       ],
     );
   }
