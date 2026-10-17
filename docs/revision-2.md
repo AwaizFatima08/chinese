@@ -1,6 +1,6 @@
 # Revision 2 (1.1.0, build 2): checklist before sending to Google Play
 
-Not submitted yet. Version 1.0.0 (build 1) is in review. Decided 2026-10-17: the Speak tab (`speak.md`) ships in this same version, so there is no separate revision 3.
+**Submitted for review on 2026-10-17 ~22:00** (Publishing overview: "Changes in review", 11 changes: release 2 (1.1.0) full roll-out, 177 countries + rest of world, store listing (name "Lingo15: Learn A Language"), content rating, target audience, privacy-policy URL, ads declaration, Data safety, health declaration, app category). Google's quick checks ran first (up to 14 min), then the review (typically up to 7 days). Note: those items were all still unsubmitted, which suggests build 1 had never actually gone to review. Decided 2026-10-17: the Speak tab (`speak.md`) ships in this same version, so there is no separate revision 3.
 
 ## Build (rebuilt 2026-10-17 20:55 with the Speak tab: AAB 63.5 MB, versionCode 2; Play signing SHA-1 added to Firebase)
 1. `google-services.json` is in place (copy in `.secrets/`); both SHA-1 fingerprints (upload and Play signing) are in Firebase.
@@ -8,8 +8,8 @@ Not submitted yet. Version 1.0.0 (build 1) is in review. Decided 2026-10-17: the
 3. Test the release APK on a phone: sign in, finish a lesson, sign out/in, delete account.
 
 ## Play Console changes (when uploading 1.1.0)
-- **Privacy policy URL**: `https://tools.homilabs.org/lingo15/privacy-policy` (the old `.../privacy#lingo15` still works).
-- **Data safety** (update the form, it must match the policy):
+- **Privacy policy URL**: `https://tools.homilabs.org/lingo15/privacy-policy` (set 2026-10-17; the old `.../privacy#lingo15` still works).
+- **Data safety** (done 2026-10-17; it must match the policy):
   - Personal info: Email address, Name, User IDs. Collected, not shared. Purposes: App functionality, Account management. Required only if the user signs in (optional feature).
   - App activity: collected for app functionality (progress backup). Not shared.
   - Data encrypted in transit: yes. Account creation methods: OAuth (Google). Users can log in with accounts created outside the app: yes (Google).
