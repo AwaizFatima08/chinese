@@ -3,17 +3,22 @@
 Console app id 4974727162267848659. Privacy policy: https://tools.homilabs.org/lingo15/privacy-policy
 
 ## App name (max 30)
-Lingo15: Chinese & German  (unchanged: "Lingo15: Chinese, German, Speak" is 31 characters, one over the limit)
+Lingo15: Learn a language
 
 ## Short description (max 80)
-Chinese (HSK 1-6), German (A1-C2) and English speaking practice, 15 min a day.
+Chinese, German and English speaking practice in short lessons, 15 min a day.
 
 ## Full description (max 4000)
-Lingo15 teaches Chinese and German in short daily lessons that fit into 15 minutes. Listen, speak, write and review, then stop. No streak pressure, no endless scrolling.
+Lingo15 teaches Chinese and German in short daily lessons, and helps English speakers sound clearer. Fifteen minutes a day: listen, speak, write and review, then stop. No streak pressure, no endless scrolling.
 
-TWO LANGUAGES, ONE APP
-- Chinese (Mandarin) from HSK 1 to HSK 6, with pinyin and tone colours
-- German from A1 to C2, with der, die and das colour coding
+THREE WAYS TO USE IT
+- Learn Chinese (Mandarin) from HSK 1 to HSK 6
+- Learn German from A1 to C2
+- Polish your spoken English: pronunciation, word stress, intonation and conversation
+
+CHINESE AND GERMAN
+- Chinese with pinyin, tone colours and stroke-by-stroke writing
+- German with der, die and das colour coding
 - Switch language any time in Settings. Your progress is kept for each language.
 
 LEARN BY HEARING AND SPEAKING
