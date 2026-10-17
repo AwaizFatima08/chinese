@@ -3,7 +3,7 @@
 Console app id 4974727162267848659. Privacy policy: https://tools.homilabs.org/lingo15/privacy-policy
 
 ## App name (max 30)
-Lingo15: Chinese, German, Speak
+Lingo15: Chinese & German  (unchanged: "Lingo15: Chinese, German, Speak" is 31 characters, one over the limit)
 
 ## Short description (max 80)
 Chinese (HSK 1-6), German (A1-C2) and English speaking practice, 15 min a day.
