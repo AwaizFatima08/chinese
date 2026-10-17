@@ -2,8 +2,8 @@
 
 Not submitted yet. Version 1.0.0 (build 1) is in review.
 
-## Build
-1. Put `google-services.json` in `android/app/` (see `docs/firebase.md`), add the Play signing SHA-1 in Firebase.
+## Build (done 2026-10-17: AAB built, 62.7 MB, versionCode 2; Play signing SHA-1 added to Firebase)
+1. `google-services.json` is in place (copy in `.secrets/`); both SHA-1 fingerprints (upload and Play signing) are in Firebase.
 2. `scripts/build_release.sh` produces `build/app/outputs/bundle/release/app-release.aab` (versionCode 2).
 3. Test the release APK on a phone: sign in, finish a lesson, sign out/in, delete account.
 
