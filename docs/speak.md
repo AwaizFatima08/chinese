@@ -39,7 +39,7 @@ Measured on the test phones: Samsung A12 3.8 GB RAM (too small), Tab S9 FE 7.9 G
 No new data leaves the device. Microphone is used for recognition by the Android recogniser (same as the language lessons). Progress is stored as language `en` and syncs with the optional backup like other languages. Credit: CMU Pronouncing Dictionary (About screen + licence file).
 
 ## Release
-Revision 3 = version 1.2.0+3, after revision 2 is live. Needs Play listing text for the Speak tab; Data safety unchanged (microphone already declared by the recogniser use).
+Ships in 1.1.0+2 together with the account/backup work (decided 2026-10-17, see `revision-2.md`). Listing text is in `play-listing.md`; Data safety unchanged (audio is processed on the device and discarded); the privacy policy explains the accent exercises.
 
 ## Checks before release
 - A native English speaker reviews sentences, role-plays and vocabulary examples.

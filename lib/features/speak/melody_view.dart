@@ -38,6 +38,7 @@ class _MelodyViewState extends ConsumerState<MelodyView> {
   double _best = 0;
   bool _noPermission = false;
   bool _finished = false;
+  final _scroll = ScrollController();
   late final AudioCapture _capture;
   late final VoiceListener _listener;
 
@@ -52,7 +53,22 @@ class _MelodyViewState extends ConsumerState<MelodyView> {
   @override
   void dispose() {
     unawaited(_capture.cancel());
+    _scroll.dispose();
     super.dispose();
+  }
+
+  /// Brings the result card into view once it has been laid out.
+  void _showResult() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_scroll.hasClients) return;
+      unawaited(
+        _scroll.animateTo(
+          _scroll.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        ),
+      );
+    });
   }
 
   Future<void> _prepare() async {
@@ -132,6 +148,7 @@ class _MelodyViewState extends ConsumerState<MelodyView> {
       _score = score;
       _stage = _Stage.result;
     });
+    _showResult();
     if (score.passed) {
       if (ref.read(settingsProvider).haptics) {
         unawaited(HapticFeedback.lightImpact());
@@ -150,6 +167,7 @@ class _MelodyViewState extends ConsumerState<MelodyView> {
       children: [
         Expanded(
           child: ListView(
+            controller: _scroll,
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
             children: [
               Text(
@@ -193,15 +211,16 @@ class _MelodyViewState extends ConsumerState<MelodyView> {
             ],
           ),
         ),
-        ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: MediaQuery.sizeOf(context).height * 0.42,
+        if (!_finished)
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.sizeOf(context).height * 0.42,
+            ),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
+              child: _controls(context),
+            ),
           ),
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 4, 20, 12),
-            child: _controls(context),
-          ),
-        ),
       ],
     );
   }

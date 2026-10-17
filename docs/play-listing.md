@@ -1,12 +1,12 @@
 # Play listing: Lingo15 (com.homilabs.lingo15)
 
-Console app id 4974727162267848659. Privacy policy: https://tools.homilabs.org/privacy#lingo15
+Console app id 4974727162267848659. Privacy policy: https://tools.homilabs.org/lingo15/privacy-policy
 
 ## App name (max 30)
-Lingo15: Chinese & German
+Lingo15: Chinese, German, Speak
 
 ## Short description (max 80)
-Learn Chinese (HSK 1-6) and German (A1-C2) in just 15 minutes a day.
+Chinese (HSK 1-6), German (A1-C2) and English speaking practice, 15 min a day.
 
 ## Full description (max 4000)
 Lingo15 teaches Chinese and German in short daily lessons that fit into 15 minutes. Listen, speak, write and review, then stop. No streak pressure, no endless scrolling.
@@ -21,6 +21,13 @@ LEARN BY HEARING AND SPEAKING
 - Say the word yourself and get a quick check of your pronunciation
 - Shadow whole sentences to build rhythm and confidence
 
+SPEAK ENGLISH MORE CLEARLY
+- A separate Speak tab for people who already know English and want to sound clearer
+- Tell similar sounds apart (ship / sheep, think / sink), put the stress on the right syllable
+- Copy the melody and rhythm of a sentence: the app records you and shows where your voice should rise and fall
+- Role-play everyday conversations: ordering coffee, a job interview, at the doctor's, booking a table
+- 300 advanced words with meanings, examples and spaced review; American or British voice
+
 LEARN TO WRITE
 - Trace Chinese characters stroke by stroke, with hints and an animated stroke order
 - Type German words and practise the special letters ä, ö, ü and ß
@@ -34,14 +41,14 @@ SHORT LESSONS THAT STICK
 
 BUILT FOR REAL LIFE
 - Works offline. All lessons are inside the app
-- No account and no sign-up. Your progress stays on your phone
+- No account needed. Optionally sign in with Google to back up your progress and continue on another device
 - Large, clear text and layouts that work on phones and tablets
 
 ABOUT ADS
 Lingo15 is free and supported by ads. Ads are limited to family-suitable content. A rewarded ad is optional and can repair a missed streak day. In some regions you will be asked for your consent first, and you can change your choice later in Settings.
 
 PERMISSIONS
-The microphone is used only for speaking practice, and only if you allow it. Your speech is processed by your phone's own speech recognition service. Lingo15 does not record or keep your voice.
+The microphone is used only for speaking practice, and only if you allow it. Most exercises use your phone's own speech recognition service; the accent exercises compare your voice with the app's voice on your phone and then discard it. Lingo15 never keeps or uploads your voice.
 
 Word lists and character data come from open-licence sources. Credits are shown in the app. Lingo15 is a study aid and does not prepare you for any specific exam.
 
