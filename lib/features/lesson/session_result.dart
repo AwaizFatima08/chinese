@@ -16,6 +16,7 @@ class SessionResult {
     required this.correctByWord,
     required this.charactersWritten,
     required this.seconds,
+    this.language,
   });
 
   final String? lessonId;
@@ -33,6 +34,10 @@ class SessionResult {
   final Map<int, bool> correctByWord;
   final Set<String> charactersWritten;
   final int seconds;
+
+  /// The language this result belongs to; the current learning language when
+  /// null. Spoken-English practice sets it to `en`.
+  final String? language;
 
   int get wordsPracticed => outcomes.length + correctByWord.length;
 }

@@ -85,6 +85,19 @@ class AboutScreen extends ConsumerWidget {
                   ),
                 ),
               ),
+          Card(
+            margin: const EdgeInsets.only(bottom: 8),
+            child: ListTile(
+              title: const Text(
+                'CMU Pronouncing Dictionary',
+                style: TextStyle(fontWeight: FontWeight.w700),
+              ),
+              subtitle: Text(l.aboutSpeakCredit),
+              isThreeLine: true,
+              trailing: const Icon(Icons.open_in_new_rounded),
+              onTap: () => _open('https://github.com/cmusphinx/cmudict'),
+            ),
+          ),
           const SizedBox(height: 8),
           OutlinedButton(
             onPressed: () => _showLicenceText(context, ref),
@@ -103,7 +116,7 @@ class AboutScreen extends ConsumerWidget {
 
   Future<void> _showLicenceText(BuildContext context, WidgetRef ref) async {
     final pack = ref.read(contentProvider).value?.pack;
-    final files = pack?.licenseFiles ?? const <String>[];
+    final files = [...?pack?.licenseFiles, 'assets/licenses/speak-cmudict.txt'];
     final texts = [for (final f in files) await rootBundle.loadString(f)];
     if (!context.mounted) return;
     await showDialog<void>(

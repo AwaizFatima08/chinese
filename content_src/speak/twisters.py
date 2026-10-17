@@ -1,0 +1,28 @@
+"""Traditional tongue twisters (public domain folk sayings)."""
+
+TWISTERS = [
+ dict(id="seashells", focus="s / sh", text="She sells seashells by the seashore."),
+ dict(id="peter", focus="p", text="Peter Piper picked a peck of pickled peppers."),
+ dict(id="woodchuck", focus="w / ch", text="How much wood would a woodchuck chuck if a woodchuck could chuck wood?"),
+ dict(id="lorry", focus="r / l", text="Red lorry, yellow lorry."),
+ dict(id="unique", focus="n / y", text="Unique New York, unique New York, you know you need unique New York."),
+ dict(id="scream", focus="s / sk", text="I scream, you scream, we all scream for ice cream."),
+ dict(id="betty", focus="b / t", text="Betty Botter bought some butter, but she said the butter's bitter."),
+ dict(id="fuzzy", focus="f / z", text="Fuzzy Wuzzy was a bear. Fuzzy Wuzzy had no hair."),
+ dict(id="copper", focus="p / k", text="A proper copper coffee pot."),
+ dict(id="rubber", focus="b", text="Rubber baby buggy bumpers."),
+ dict(id="snails", focus="s / sl", text="Six slippery snails slid slowly seaward."),
+ dict(id="fritters", focus="f / fr", text="Fresh French fried fly fritters."),
+ dict(id="witch", focus="w / ch", text="Which witch is which?"),
+ dict(id="thieves", focus="th", text="Thirty-three thieves thought they thrilled the throne throughout Thursday."),
+ dict(id="free", focus="th / fr", text="Three free throws."),
+ dict(id="bug", focus="b / bl", text="A big black bug bit a big black bear."),
+ dict(id="leather", focus="th / w", text="Lesser leather never weathered wetter weather better."),
+ dict(id="brave", focus="br / bl", text="Brisk brave brigadiers brandished broad bright blades."),
+ dict(id="toy", focus="oy", text="Toy boat, toy boat, toy boat."),
+ dict(id="how-now", focus="ow", text="How now, brown cow?"),
+ dict(id="gooey", focus="g / k", text="Gobbling gorgeous gooey grapes."),
+ dict(id="picked", focus="k / p", text="If Peter Piper picked a peck of pickled peppers, where's the peck of pickled peppers Peter Piper picked?"),
+ dict(id="sheikh", focus="sh / s", text="The sixth sick sheik's sixth sheep's sick."),
+ dict(id="cheese", focus="ch / z", text="Cheerful chimps chomp chunks of cheese."),
+]

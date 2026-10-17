@@ -35,3 +35,8 @@ curl -sSL -o german_nouns_LICENSE.txt https://raw.githubusercontent.com/gambolpu
 curl -sSL -o deu_sentences.tsv.bz2 https://downloads.tatoeba.org/exports/per_language/deu/deu_sentences.tsv.bz2
 curl -sSL -o deu-eng_links.tsv.bz2 https://downloads.tatoeba.org/exports/per_language/deu/deu-eng_links.tsv.bz2
 ls -la "$RAW/de"
+
+# English speaking practice: CMU Pronouncing Dictionary (IPA and stress)
+mkdir -p data/raw/en
+[ -f data/raw/en/cmudict.dict ] || curl -sL -o data/raw/en/cmudict.dict https://raw.githubusercontent.com/cmusphinx/cmudict/master/cmudict.dict
+[ -f data/raw/en/cmudict-LICENSE ] || curl -sL -o data/raw/en/cmudict-LICENSE https://raw.githubusercontent.com/cmusphinx/cmudict/master/LICENSE

@@ -17,6 +17,7 @@ class AppSettings {
     this.haptics = true,
     this.unlockAll = false,
     this.onboardingDone = false,
+    this.englishAccent = 'US',
   });
 
   /// Language currently being learned.
@@ -43,6 +44,15 @@ class AppSettings {
   final bool unlockAll;
   final bool onboardingDone;
 
+  /// Voice used in spoken-English practice: `US` or `UK`.
+  final String englishAccent;
+
+  /// Text-to-speech locale for [englishAccent].
+  String get englishTtsLocale => englishAccent == 'UK' ? 'en-GB' : 'en-US';
+
+  /// Speech-recognition locale for [englishAccent].
+  String get englishSttLocale => englishAccent == 'UK' ? 'en_GB' : 'en_US';
+
   int levelFor(String language) => levels[language] ?? 1;
 
   AppSettings copyWith({
@@ -56,6 +66,7 @@ class AppSettings {
     bool? haptics,
     bool? unlockAll,
     bool? onboardingDone,
+    String? englishAccent,
   }) => AppSettings(
     languageId: languageId ?? this.languageId,
     levels: levels ?? this.levels,
@@ -67,6 +78,7 @@ class AppSettings {
     haptics: haptics ?? this.haptics,
     unlockAll: unlockAll ?? this.unlockAll,
     onboardingDone: onboardingDone ?? this.onboardingDone,
+    englishAccent: englishAccent ?? this.englishAccent,
   );
 }
 
@@ -100,6 +112,7 @@ class SettingsStore {
       haptics: _prefs.getBool('haptics') ?? true,
       unlockAll: _prefs.getBool('unlockAll') ?? false,
       onboardingDone: _prefs.getBool('onboardingDone') ?? false,
+      englishAccent: _prefs.getString('englishAccent') == 'UK' ? 'UK' : 'US',
     );
   }
 
@@ -116,5 +129,6 @@ class SettingsStore {
     await _prefs.setBool('haptics', s.haptics);
     await _prefs.setBool('unlockAll', s.unlockAll);
     await _prefs.setBool('onboardingDone', s.onboardingDone);
+    await _prefs.setString('englishAccent', s.englishAccent);
   }
 }

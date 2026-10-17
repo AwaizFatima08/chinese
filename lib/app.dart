@@ -12,6 +12,8 @@ import 'features/onboarding/onboarding_screen.dart';
 import 'features/path/path_screen.dart';
 import 'features/progress/progress_screen.dart';
 import 'features/settings/settings_screen.dart';
+import 'features/speak/speak_screen.dart';
+import 'features/speak/speak_session_screen.dart';
 import 'features/words/words_screen.dart';
 import 'l10n/l10n.dart';
 
@@ -52,6 +54,14 @@ final routerProvider = Provider<GoRouter>((ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
+                path: '/speak',
+                builder: (context, state) => const SpeakScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
                 path: '/progress',
                 builder: (context, state) => const ProgressScreen(),
               ),
@@ -72,6 +82,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => LessonScreen(
           key: ValueKey(state.pathParameters['id']),
           lessonId: state.pathParameters['id'],
+        ),
+      ),
+      GoRoute(
+        path: '/speak/:id',
+        builder: (context, state) => SpeakSessionScreen(
+          key: ValueKey(state.pathParameters['id']),
+          setId: state.pathParameters['id']!,
         ),
       ),
       GoRoute(
