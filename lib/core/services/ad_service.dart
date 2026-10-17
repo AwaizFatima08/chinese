@@ -18,6 +18,10 @@ class AdUnits {
   static const _interstitial = String.fromEnvironment('AD_INTERSTITIAL_ID');
   static const _rewarded = String.fromEnvironment('AD_REWARDED_ID');
 
+  /// True when at least one ad unit is usable in this build.
+  static bool get anyConfigured =>
+      banner != null || interstitial != null || rewarded != null;
+
   static String? get banner =>
       kReleaseMode ? (_banner.isEmpty ? null : _banner) : _testBanner;
   static String? get interstitial => kReleaseMode
@@ -119,6 +123,9 @@ class AdMobService implements AdService {
   Future<void> init() async {
     if (_initStarted) return;
     _initStarted = true;
+    // No real ad units (a release build without --dart-define ids): stay
+    // fully ad-free, with no consent form and no SDK start.
+    if (!AdUnits.anyConfigured) return;
     try {
       final done = Completer<void>();
       ConsentInformation.instance.requestConsentInfoUpdate(
@@ -136,7 +143,7 @@ class AdMobService implements AdService {
       _canRequest = await ConsentInformation.instance.canRequestAds();
       if (!_canRequest) return;
       await MobileAds.instance.updateRequestConfiguration(
-        RequestConfiguration(maxAdContentRating: MaxAdContentRating.pg),
+        RequestConfiguration(maxAdContentRating: MaxAdContentRating.g),
       );
       await MobileAds.instance.initialize();
       _loadInterstitial();

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Draws the launcher icon from the 学 stroke outlines (Make Me a Hanzi data).
+"""Draws the launcher icon: a bold "15" on the brand red.
 
 Writes legacy and adaptive icon PNGs under android/app/src/main/res/.
-Run: python3 tool/make_icons.py   (needs inkscape; data/raw from scripts/fetch_sources.sh)
+Run: python3 tool/make_icons.py   (needs inkscape and the DejaVu Sans font)
 """
 import json, os, subprocess, tempfile
 
@@ -10,29 +10,20 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RES = os.path.join(ROOT, "android", "app", "src", "main", "res")
 RED = "#C8372D"
 
-def glyph_paths(ch):
-    with open(os.path.join(ROOT, "data", "raw", "mmah_graphics.txt"), encoding="utf-8") as f:
-        for line in f:
-            e = json.loads(line)
-            if e["character"] == ch:
-                return e["strokes"]
-    raise SystemExit("glyph not found")
-
-def svg(kind, strokes):
-    # Glyph box is 1024 wide, y-up with baseline 900. Scale to fill `fill` of the canvas.
-    if kind == "legacy":      # full-bleed rounded square
-        size, fill, bg, radius = 1024, 0.64, RED, 230
-    elif kind == "background":
-        size, fill, bg, radius = 1024, 0, RED, 0
-    else:                     # adaptive foreground: transparent, inside the 66% safe zone
-        size, fill, bg, radius = 1024, 0.50, None, 0
-    paths = "".join(f'<path d="{d}"/>' for d in strokes)
-    s = size * fill / 1024
-    off = (size - 1024 * s) / 2
-    g = (f'<g fill="#FFFFFF" transform="translate({off:.1f},{off + 900 * s:.1f}) scale({s:.4f},{-s:.4f})">{paths}</g>'
-         if fill else "")
+def svg(kind, _unused=None):
+    """Bold "15" on the brand red. Language-neutral: the app teaches several languages."""
+    if kind == "legacy":        # launcher icon, rounded
+        size, fs, bg, radius = 1024, 600, RED, 230
+    elif kind == "play":        # Play Store icon: full-bleed square (Play applies the mask)
+        size, fs, bg, radius = 1024, 600, RED, 0
+    else:                       # adaptive foreground: inside the 66% safe zone
+        size, fs, bg, radius = 1024, 420, None, 0
     rect = f'<rect width="{size}" height="{size}" rx="{radius}" fill="{bg}"/>' if bg else ""
-    return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}">{rect}{g}</svg>'
+    text = (f'<text x="{size/2}" y="{size/2 + fs*0.36}" text-anchor="middle" fill="#FFFFFF" '
+            f'font-family="DejaVu Sans, Liberation Sans, sans-serif" font-weight="bold" '
+            f'font-size="{fs}" letter-spacing="-20">15</text>')
+    return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {size} {size}">{rect}{text}</svg>'
+
 
 def render(svg_text, out, px):
     with tempfile.NamedTemporaryFile("w", suffix=".svg", delete=False) as t:
@@ -45,7 +36,7 @@ def render(svg_text, out, px):
     os.unlink(name)
 
 def main():
-    strokes = glyph_paths("学")
+    strokes = None
     dens = {"mdpi": 1, "hdpi": 1.5, "xhdpi": 2, "xxhdpi": 3, "xxxhdpi": 4}
     for d, k in dens.items():
         render(svg("legacy", strokes), f"{RES}/mipmap-{d}/ic_launcher.png", int(48 * k))
@@ -67,7 +58,7 @@ def main():
 </resources>
 ''')
     # 512 px Play Store icon
-    render(svg("legacy", strokes), os.path.join(ROOT, "store", "play_icon_512.png"), 512)
+    render(svg("play", strokes), os.path.join(ROOT, "store", "play_icon_512.png"), 512)
     print("icons written")
 
 main()

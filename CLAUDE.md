@@ -1,6 +1,6 @@
-# LingoDaily — learn languages in 15 minutes a day
+# Lingo15 — learn languages in 15 minutes a day
 
-Flutter **Android** app (package `com.homilabs.lingodaily`, never change after the first Play upload). Two languages ship: Chinese (HSK 1–6) and German (CEFR A1–C2); built to host more. Free, supported by AdMob ads. Working title: change `android:label`, `app_en.arb` (`appName`) and the icon script if renamed.
+Flutter **Android** app (package `com.homilabs.lingo15`, never change after the first Play upload). Two languages ship: Chinese (HSK 1–6) and German (CEFR A1–C2); built to host more. Free, supported by AdMob ads. Working title: change `android:label`, `app_en.arb` (`appName`) and the icon script if renamed.
 
 ## Locations
 - Root: `/mnt/storage/projects/Chinese`

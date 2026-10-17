@@ -1,7 +1,7 @@
 name: lingodaily
-description: "LingoDaily - learn Chinese (HSK 1-6) by listening, speaking, reading and writing in 15 minutes a day. Built to host more languages."
+description: "Lingo15 - learn Chinese (HSK 1-6) and German (A1-C2) by listening, speaking, reading and writing in 15 minutes a day. Built to host more languages."
 publish_to: 'none'
-version: 0.1.0+1
+version: 1.0.0+1
 
 environment:
   sdk: ^3.11.0

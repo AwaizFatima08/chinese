@@ -164,8 +164,13 @@ class _WelcomePage extends StatelessWidget {
             ),
             alignment: Alignment.center,
             child: const Text(
-              '学',
-              style: TextStyle(fontSize: 84, color: Colors.white, height: 1.1),
+              '15',
+              style: TextStyle(
+                fontSize: 64,
+                fontWeight: FontWeight.w800,
+                color: Colors.white,
+                height: 1.1,
+              ),
             ),
           ),
           const SizedBox(height: 32),

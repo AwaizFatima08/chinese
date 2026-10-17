@@ -7,7 +7,7 @@ Placeholders: {name} with an optional type, e.g. n:int.
 import json, os, re
 
 S = [
- ("appName", "LingoDaily", {}),
+ ("appName", "Lingo15", {}),
  # navigation
  ("navToday", "Today", {}), ("navPath", "Path", {}), ("navProgress", "Progress", {}), ("navSettings", "Settings", {}),
  # common
@@ -184,7 +184,7 @@ S = [
  # about
  ("aboutTitle", "About", {}),
  ("aboutVersion", "Version {v}", {"v": "String"}),
- ("aboutBody", "LingoDaily helps you learn a language in short daily sessions: listen, speak, read and write.", {}),
+ ("aboutBody", "Lingo15 helps you learn a language in short daily sessions: listen, speak, read and write.", {}),
  ("aboutAds", "The app is free and supported by ads. You can change your ad choices in Settings.", {}),
  ("aboutCredits", "Data credits", {}),
  ("aboutLicenceText", "View licence text", {}),

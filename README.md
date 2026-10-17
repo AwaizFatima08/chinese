@@ -1,4 +1,4 @@
-# LingoDaily
+# Lingo15
 
 Learn **Chinese (HSK 1–6)** and **German (CEFR A1–C2)** on Android in **15 minutes a day** by listening, speaking, reading and writing. Built to host more languages.
 
