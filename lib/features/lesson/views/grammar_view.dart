@@ -78,7 +78,7 @@ class GrammarExplainView extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ToneScript(
+                        ScriptText(
                           ex.text,
                           textAlign: TextAlign.start,
                           style: const TextStyle(fontSize: 24, height: 1.3),

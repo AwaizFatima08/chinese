@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/providers.dart';
+import '../../../languages/language_tools.dart';
 import '../../../core/services/listener.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/widgets/speak_button.dart';
 import '../../../core/widgets/tone_text.dart';
 import '../../../l10n/l10n.dart';
+import '../../../languages/models.dart';
 import '../../../languages/pinyin_lookup.dart';
 import '../exercise.dart';
 import 'view_support.dart';
@@ -31,7 +33,7 @@ class SpeakView extends StatelessWidget {
       title: context.l10n.exSayIt,
       text: w.text,
       romanization: w.romanization,
-      numeric: w.romanizationNumeric,
+      word: w,
       translation: w.primaryMeaning,
       onAnswered: onAnswered,
     );
@@ -55,7 +57,7 @@ class ShadowView extends StatelessWidget {
       title: context.l10n.exShadowTitle,
       text: exercise.text,
       romanization: exercise.romanization,
-      numeric: null,
+      word: null,
       translation: exercise.translation,
       onAnswered: onAnswered,
     );
@@ -69,7 +71,7 @@ class _SpeakPractice extends ConsumerStatefulWidget {
     required this.title,
     required this.text,
     required this.romanization,
-    required this.numeric,
+    required this.word,
     required this.translation,
     required this.onAnswered,
   });
@@ -78,8 +80,8 @@ class _SpeakPractice extends ConsumerStatefulWidget {
   final String text;
   final String romanization;
 
-  /// Numeric pinyin when judging a single word; null for sentences.
-  final String? numeric;
+  /// The word being practised; null when repeating a whole sentence.
+  final Word? word;
   final String translation;
   final AnswerCallback onAnswered;
 
@@ -125,7 +127,7 @@ class _SpeakPracticeState extends ConsumerState<_SpeakPractice> {
   Future<void> _listen() async {
     final l = context.l10n;
     final listener = ref.read(voiceListenerProvider);
-    final lookup = ref.read(pinyinLookupProvider);
+    final tools = ref.read(languageToolsProvider);
     await ref.read(speakerProvider).stop();
     setState(() {
       _mode = _Mode.listening;
@@ -153,7 +155,7 @@ class _SpeakPracticeState extends ConsumerState<_SpeakPractice> {
       _maybeGiveUp();
       return;
     }
-    final verdict = _judge(lookup, result.text);
+    final verdict = _judge(tools, result.text);
     setState(() {
       _heard = result.text;
       switch (verdict) {
@@ -164,6 +166,10 @@ class _SpeakPracticeState extends ConsumerState<_SpeakPractice> {
         case SpeechMatch.toneOff:
           _mode = _Mode.ready;
           _message = l.exSpokenTone;
+          _messageIsGood = false;
+        case SpeechMatch.close:
+          _mode = _Mode.ready;
+          _message = l.exSpokenClose;
           _messageIsGood = false;
         case SpeechMatch.miss:
           _mode = _Mode.ready;
@@ -180,17 +186,11 @@ class _SpeakPracticeState extends ConsumerState<_SpeakPractice> {
     }
   }
 
-  SpeechMatch _judge(PinyinLookup? lookup, String heard) {
-    if (lookup == null) return SpeechMatch.miss;
-    final numeric = widget.numeric;
-    if (numeric != null) {
-      return lookup.match(
-        target: widget.text,
-        targetNumeric: numeric,
-        heard: heard,
-      );
-    }
-    return lookup.similarity(widget.text, heard) >= 0.6
+  SpeechMatch _judge(LanguageTools? tools, String heard) {
+    if (tools == null) return SpeechMatch.miss;
+    final word = widget.word;
+    if (word != null) return tools.matchWord(word: word, heard: heard);
+    return tools.similarity(widget.text, heard) >= 0.6
         ? SpeechMatch.exact
         : SpeechMatch.miss;
   }
@@ -209,7 +209,7 @@ class _SpeakPracticeState extends ConsumerState<_SpeakPractice> {
     final label =
         ref.watch(contentProvider).asData?.value.pack.romanizationLabel ?? '';
     final listening = _mode == _Mode.listening;
-    final isSentence = widget.numeric == null;
+    final isSentence = widget.word == null;
     final status = _statusLines(context);
     return Column(
       children: [
@@ -230,7 +230,7 @@ class _SpeakPracticeState extends ConsumerState<_SpeakPractice> {
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
                   child: Column(
                     children: [
-                      ToneScript(
+                      ScriptText(
                         widget.text,
                         romanization: isSentence ? null : widget.romanization,
                         style: TextStyle(

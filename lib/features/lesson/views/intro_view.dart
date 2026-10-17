@@ -73,7 +73,7 @@ class _IntroViewState extends ConsumerState<IntroView> {
               padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
               child: Column(
                 children: [
-                  ToneScript(
+                  ScriptText(
                     w.text,
                     romanization: w.romanization,
                     style: const TextStyle(
@@ -144,7 +144,7 @@ class _IntroViewState extends ConsumerState<IntroView> {
                             ),
                           ),
                           const SizedBox(height: 6),
-                          ToneScript(
+                          ScriptText(
                             example.text,
                             romanization: null,
                             textAlign: TextAlign.start,

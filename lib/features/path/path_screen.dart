@@ -39,7 +39,7 @@ class PathScreen extends ConsumerWidget {
     }
     final settings = ref.watch(settingsProvider);
     final current = settings.levelFor(content.pack.id);
-    final level = content.levels['hsk$current'] ?? content.levels.values.first;
+    final level = content.levelByNumber(current) ?? content.levels.values.first;
     final logic = PathLogic(progress, unlockAll: settings.unlockAll);
     final states = logic.statesFor(level);
 

@@ -6,8 +6,11 @@ enum SpeechMatch {
   /// Same word, or a word that sounds identical (tones included).
   exact,
 
-  /// Right syllables but at least one wrong tone.
+  /// Right syllables but at least one wrong tone (tonal languages).
   toneOff,
+
+  /// Nearly right: a letter off, or the wrong article (German).
+  close,
 
   /// Something else.
   miss,

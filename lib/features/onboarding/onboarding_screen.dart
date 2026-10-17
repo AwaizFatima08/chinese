@@ -200,22 +200,29 @@ class _LanguagePage extends ConsumerWidget {
       title: l.onbLanguageTitle,
       child: Column(
         children: [
-          if (content != null)
+          for (final lang
+              in registry?.available ?? const <LanguageSummary>[]) ...[
             Card(
-              color: context.scheme.primaryContainer,
+              color: content?.pack.id == lang.id
+                  ? context.scheme.primaryContainer
+                  : null,
               child: ListTile(
-                leading: Text(
-                  content.pack.flag,
-                  style: const TextStyle(fontSize: 32),
-                ),
+                onTap: () => ref
+                    .read(settingsProvider.notifier)
+                    .update((s) => s.copyWith(languageId: lang.id)),
+                leading: Text(lang.flag, style: const TextStyle(fontSize: 32)),
                 title: Text(
-                  content.pack.name,
+                  lang.name,
                   style: const TextStyle(fontWeight: FontWeight.w700),
                 ),
-                subtitle: Text(content.pack.nativeName),
-                trailing: const Icon(Icons.check_circle_rounded),
+                subtitle: Text(lang.nativeName),
+                trailing: content?.pack.id == lang.id
+                    ? const Icon(Icons.check_circle_rounded)
+                    : null,
               ),
             ),
+            const SizedBox(height: 8),
+          ],
           const SizedBox(height: 12),
           for (final c
               in registry?.comingSoon ?? const <ComingSoonLanguage>[]) ...[
@@ -347,8 +354,14 @@ class _VoicePage extends ConsumerWidget {
             const SizedBox(height: 16),
             if (ok)
               OutlinedButton.icon(
-                onPressed: () =>
-                    unawaited(ref.read(speakerProvider).speak('你好！欢迎学习中文。')),
+                onPressed: () => unawaited(
+                  ref
+                      .read(speakerProvider)
+                      .speak(
+                        ref.read(contentProvider).value?.pack.voiceTestPhrase ??
+                            '',
+                      ),
+                ),
                 icon: const Icon(Icons.volume_up_rounded),
                 label: Text(l.onbVoiceTest),
               )

@@ -15,7 +15,10 @@ class Word {
     required this.partsOfSpeech,
     required this.level,
     required this.exampleIds,
-  });
+    String? lemma,
+    this.article,
+    this.note = '',
+  }) : lemma = lemma ?? text;
 
   factory Word.fromJson(Map<String, dynamic> j) => Word(
     id: j['id'] as int,
@@ -27,12 +30,26 @@ class Word {
     partsOfSpeech: List<String>.from(j['pos'] as List<dynamic>? ?? const []),
     level: j['lvl'] as int,
     exampleIds: List<int>.from(j['ex'] as List<dynamic>? ?? const []),
+    lemma: j['l'] as String?,
+    article: j['g'] as String?,
+    note: j['x'] as String? ?? '',
   );
 
   final int id;
 
-  /// The word in the learner's target script (simplified hanzi for Chinese).
+  /// The word as shown and spoken: simplified hanzi for Chinese, and for a
+  /// German noun the article with the noun (`der Hund`).
   final String text;
+
+  /// The word without any article (`Hund`); equals [text] otherwise.
+  final String lemma;
+
+  /// Grammatical article of a noun (`der`, `die`, `das`), if the language
+  /// has gendered nouns.
+  final String? article;
+
+  /// A short grammar hint shown with the word, e.g. `Plural: die Hunde`.
+  final String note;
 
   /// Alternative script form (traditional hanzi), equal to [text] when none.
   final String altText;
@@ -73,9 +90,9 @@ class Sentence {
 
   factory Sentence.fromJson(Map<String, dynamic> j) => Sentence(
     id: j['id'] as int,
-    text: j['zh'] as String,
+    text: j['t'] as String,
     translation: j['en'] as String,
-    romanization: j['py'] as String,
+    romanization: j['r'] as String? ?? '',
     level: j['lvl'] as int,
     wordIds: List<int>.from(j['w'] as List<dynamic>? ?? const []),
   );
@@ -97,9 +114,9 @@ class GrammarExample {
   });
 
   factory GrammarExample.fromJson(Map<String, dynamic> j) => GrammarExample(
-    text: j['zh'] as String,
+    text: j['t'] as String,
     translation: j['en'] as String,
-    romanization: j['py'] as String? ?? '',
+    romanization: j['r'] as String? ?? '',
   );
 
   final String text;
@@ -117,7 +134,7 @@ sealed class GrammarQuiz {
         return OrderQuiz(
           translation: j['en'] as String,
           answer: j['answer'] as String,
-          romanization: j['py'] as String? ?? '',
+          romanization: j['r'] as String? ?? '',
           tokens: List<String>.from(j['tokens'] as List<dynamic>),
         );
       default:
@@ -342,6 +359,12 @@ class LanguagePack {
     required this.levelLabel,
     required this.levels,
     required this.attribution,
+    this.hasGender = false,
+    this.typingPractice = false,
+    this.hasRomanization = true,
+    this.colorCoding,
+    this.voiceTestPhrase = '',
+    this.licenseFiles = const [],
   });
 
   factory LanguagePack.fromJson(Map<String, dynamic> j) => LanguagePack(
@@ -355,6 +378,14 @@ class LanguagePack {
     sttLocale: j['sttLocale'] as String,
     hasTones: j['hasTones'] as bool,
     hasStrokeWriting: j['hasStrokeWriting'] as bool,
+    hasGender: j['hasGender'] as bool? ?? false,
+    typingPractice: j['typingPractice'] as bool? ?? false,
+    hasRomanization: j['hasRomanization'] as bool? ?? true,
+    colorCoding: j['colorCoding'] as String?,
+    voiceTestPhrase: j['voiceTestPhrase'] as String? ?? '',
+    licenseFiles: List<String>.from(
+      j['licenseFiles'] as List<dynamic>? ?? const [],
+    ),
     levelLabel: j['levelLabel'] as String,
     levels: [
       for (final l in j['levels'] as List<dynamic>)
@@ -376,6 +407,25 @@ class LanguagePack {
   final String sttLocale;
   final bool hasTones;
   final bool hasStrokeWriting;
+
+  /// Nouns have a grammatical gender shown as an article (German).
+  final bool hasGender;
+
+  /// Writing practice is typing what you hear (languages without a stroke
+  /// guide).
+  final bool typingPractice;
+
+  /// Whether a romanization (pinyin) accompanies the script.
+  final bool hasRomanization;
+
+  /// What the optional colour hints mark: `tones` or `genders`; null for none.
+  final String? colorCoding;
+
+  /// A short sentence to test the teacher voice.
+  final String voiceTestPhrase;
+
+  /// Asset paths of the licence texts shown on the About screen.
+  final List<String> licenseFiles;
   final String levelLabel;
   final List<LevelInfo> levels;
   final List<Attribution> attribution;
@@ -413,6 +463,29 @@ class ComingSoonLanguage {
         nativeName: j['nativeName'] as String,
         flag: j['flag'] as String,
       );
+
+  final String id;
+  final String name;
+  final String nativeName;
+  final String flag;
+}
+
+/// A language that ships in the app, as listed in the language registry.
+@immutable
+class LanguageSummary {
+  const LanguageSummary({
+    required this.id,
+    required this.name,
+    required this.nativeName,
+    required this.flag,
+  });
+
+  factory LanguageSummary.fromJson(Map<String, dynamic> j) => LanguageSummary(
+    id: j['id'] as String,
+    name: j['name'] as String,
+    nativeName: j['nativeName'] as String,
+    flag: j['flag'] as String,
+  );
 
   final String id;
   final String name;

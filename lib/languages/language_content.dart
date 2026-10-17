@@ -43,6 +43,13 @@ class LanguageContent {
   late final List<Word> allWords = words.values.toList()
     ..sort((a, b) => a.id.compareTo(b.id));
 
+  /// The level with 1-based [number] (HSK 3, CEFR B1 is 3), or null.
+  Level? levelByNumber(int number) {
+    final infos = pack.levels;
+    if (number < 1 || number > infos.length) return null;
+    return levels[infos[number - 1].id];
+  }
+
   Lesson? lessonById(String id) => _lessonById[id];
   Level? levelOfLesson(String lessonId) => _levelOfLesson[lessonId];
   Word? wordByText(String text) => _wordByText[text];
@@ -61,8 +68,9 @@ class LanguageContent {
   }
 
   Future<Map<String, StrokeData>> _loadStrokeTable(int level) async {
+    final levelId = pack.levels[level - 1].id;
     final raw = await _bundle.loadString(
-      'assets/content/${pack.id}/strokes/hsk$level.json',
+      'assets/content/${pack.id}/strokes/$levelId.json',
     );
     final json = jsonDecode(raw) as Map<String, dynamic>;
     return {
@@ -115,11 +123,13 @@ class LanguageContent {
         await json('levels/${info.id}.json') as Map<String, dynamic>,
       );
     }
-    final index = Map<String, int>.from(
-      (await json('strokes/index.json') as Map<String, dynamic>).map(
-        (k, v) => MapEntry(k, v as int),
-      ),
-    );
+    final index = pack.hasStrokeWriting
+        ? Map<String, int>.from(
+            (await json('strokes/index.json') as Map<String, dynamic>).map(
+              (k, v) => MapEntry(k, v as int),
+            ),
+          )
+        : <String, int>{};
     return LanguageContent._(
       pack: pack,
       words: words,
@@ -136,7 +146,7 @@ class LanguageContent {
 class LanguageRegistry {
   const LanguageRegistry({required this.available, required this.comingSoon});
 
-  final List<String> available;
+  final List<LanguageSummary> available;
   final List<ComingSoonLanguage> comingSoon;
 
   static Future<LanguageRegistry> load({AssetBundle? bundle}) async {
@@ -145,7 +155,10 @@ class LanguageRegistry {
     );
     final j = jsonDecode(raw) as Map<String, dynamic>;
     return LanguageRegistry(
-      available: List<String>.from(j['available'] as List<dynamic>),
+      available: [
+        for (final a in j['available'] as List<dynamic>)
+          LanguageSummary.fromJson(a as Map<String, dynamic>),
+      ],
       comingSoon: [
         for (final c in j['comingSoon'] as List<dynamic>)
           ComingSoonLanguage.fromJson(c as Map<String, dynamic>),

@@ -105,9 +105,9 @@ class SessionNotifier extends Notifier<SessionState> {
   @override
   SessionState build() {
     final content = ref.read(contentProvider).requireValue;
-    final lookup = ref.read(pinyinLookupProvider)!;
+    final tools = ref.read(languageToolsProvider)!;
     final progress = ref.read(progressProvider).value;
-    final builder = ExerciseBuilder(content, lookup);
+    final builder = ExerciseBuilder(content, tools);
     final List<Exercise> exercises;
     if (request.review) {
       final due = progress?.dueWordIds(limit: 12) ?? const <int>[];
@@ -177,6 +177,7 @@ class SessionNotifier extends Notifier<SessionState> {
 
   bool _scores(Exercise ex) => switch (ex) {
     ChoiceExercise() ||
+    TypeExercise() ||
     SentenceChoiceExercise() ||
     OrderExercise() ||
     GrammarChoiceExercise() => true,

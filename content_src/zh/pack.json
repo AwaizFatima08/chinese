@@ -11,9 +11,40 @@
   "hasStrokeWriting": true,
   "levelLabel": "HSK",
   "attribution": [
-    {"name": "complete-hsk-vocabulary", "license": "MIT", "url": "https://github.com/drkameleon/complete-hsk-vocabulary", "use": "HSK word lists, pinyin"},
-    {"name": "CC-CEDICT", "license": "CC BY-SA 4.0", "url": "https://cc-cedict.org", "use": "English meanings"},
-    {"name": "Tatoeba", "license": "CC BY 2.0 FR", "url": "https://tatoeba.org", "use": "Example sentences"},
-    {"name": "Make Me a Hanzi", "license": "Arphic Public License / LGPL", "url": "https://github.com/skishore/makemeahanzi", "use": "Stroke order data"}
+    {
+      "name": "complete-hsk-vocabulary",
+      "license": "MIT",
+      "url": "https://github.com/drkameleon/complete-hsk-vocabulary",
+      "use": "HSK word lists, pinyin"
+    },
+    {
+      "name": "CC-CEDICT",
+      "license": "CC BY-SA 4.0",
+      "url": "https://cc-cedict.org",
+      "use": "English meanings"
+    },
+    {
+      "name": "Tatoeba",
+      "license": "CC BY 2.0 FR",
+      "url": "https://tatoeba.org",
+      "use": "Example sentences"
+    },
+    {
+      "name": "Make Me a Hanzi",
+      "license": "Arphic Public License / LGPL",
+      "url": "https://github.com/skishore/makemeahanzi",
+      "use": "Stroke order data"
+    }
+  ],
+  "hasGender": false,
+  "typingPractice": false,
+  "hasRomanization": true,
+  "colorCoding": "tones",
+  "voiceTestPhrase": "你好！欢迎学习中文。",
+  "licenseFiles": [
+    "assets/licenses/data-credits.txt",
+    "assets/licenses/complete-hsk-vocabulary-MIT.txt",
+    "assets/licenses/makemeahanzi.txt",
+    "assets/licenses/arphic-public-license.txt"
   ]
 }

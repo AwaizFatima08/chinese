@@ -1,9 +1,42 @@
 {
-  "available": ["zh"],
+  "available": [
+    {
+      "id": "zh",
+      "name": "Chinese (Mandarin)",
+      "nativeName": "中文",
+      "flag": "🇨🇳"
+    },
+    {
+      "id": "de",
+      "name": "German",
+      "nativeName": "Deutsch",
+      "flag": "🇩🇪"
+    }
+  ],
   "comingSoon": [
-    {"id": "ja", "name": "Japanese", "nativeName": "日本語", "flag": "🇯🇵"},
-    {"id": "ko", "name": "Korean", "nativeName": "한국어", "flag": "🇰🇷"},
-    {"id": "ar", "name": "Arabic", "nativeName": "العربية", "flag": "🇸🇦"},
-    {"id": "es", "name": "Spanish", "nativeName": "Español", "flag": "🇪🇸"}
+    {
+      "id": "ja",
+      "name": "Japanese",
+      "nativeName": "日本語",
+      "flag": "🇯🇵"
+    },
+    {
+      "id": "ko",
+      "name": "Korean",
+      "nativeName": "한국어",
+      "flag": "🇰🇷"
+    },
+    {
+      "id": "ar",
+      "name": "Arabic",
+      "nativeName": "العربية",
+      "flag": "🇸🇦"
+    },
+    {
+      "id": "es",
+      "name": "Spanish",
+      "nativeName": "Español",
+      "flag": "🇪🇸"
+    }
   ]
 }

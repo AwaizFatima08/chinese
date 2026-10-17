@@ -7,7 +7,7 @@ import '../data/progress_models.dart';
 import '../data/progress_repository.dart';
 import '../data/settings.dart';
 import '../languages/language_content.dart';
-import '../languages/pinyin_lookup.dart';
+import '../languages/language_tools.dart';
 import 'services/ad_service.dart';
 import 'services/listener.dart';
 import 'services/speaker.dart';
@@ -80,7 +80,10 @@ final contentProvider = FutureProvider<LanguageContent>((ref) {
   return LanguageContent.load(id);
 });
 
-final pinyinLookupProvider = Provider<PinyinLookup?>((ref) {
+/// Language-specific text tools (tiles, speech matching) for the current pack.
+final languageToolsProvider = Provider<LanguageTools?>((ref) {
   final content = ref.watch(contentProvider).asData?.value;
-  return content == null ? null : PinyinLookup(content.words.values);
+  return content == null
+      ? null
+      : LanguageTools.forPack(content.pack, content.words.values);
 });

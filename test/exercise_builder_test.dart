@@ -3,7 +3,7 @@ import 'package:lingodaily/features/lesson/exercise.dart';
 import 'package:lingodaily/features/lesson/exercise_builder.dart';
 import 'package:lingodaily/languages/language_content.dart';
 import 'package:lingodaily/languages/models.dart';
-import 'package:lingodaily/languages/pinyin_lookup.dart';
+import 'package:lingodaily/languages/language_tools.dart';
 
 import 'helpers/file_bundle.dart';
 
@@ -13,6 +13,7 @@ int seconds(Exercise e) => switch (e) {
   ChoiceExercise() => 9,
   SpeakExercise() => 20,
   WriteExercise() => 55,
+  TypeExercise() => 30,
   SentenceChoiceExercise() => 20,
   OrderExercise() => 28,
   ShadowExercise() => 22,
@@ -26,7 +27,10 @@ void main() {
 
   setUpAll(() async {
     content = await LanguageContent.load('zh', bundle: FileAssetBundle());
-    builder = ExerciseBuilder(content, PinyinLookup(content.words.values));
+    builder = ExerciseBuilder(
+      content,
+      LanguageTools.forPack(content.pack, content.words.values),
+    );
   });
 
   test('content loads with the expected shape', () {

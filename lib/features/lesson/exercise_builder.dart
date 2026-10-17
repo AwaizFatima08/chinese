@@ -4,13 +4,13 @@ import '../../core/util/pinyin.dart';
 import '../../data/progress_models.dart';
 import '../../languages/language_content.dart';
 import '../../languages/models.dart';
-import '../../languages/pinyin_lookup.dart';
+import '../../languages/language_tools.dart';
 import 'exercise.dart';
 
 /// Turns a lesson (or a set of due words) into the ordered exercises the
 /// learner works through. Deterministic for a given seed, so tests are stable.
 class ExerciseBuilder {
-  ExerciseBuilder(this.content, this.lookup) {
+  ExerciseBuilder(this.content, this.tools) {
     for (final w in content.allWords) {
       _byLevel.putIfAbsent(w.level, () => []).add(w);
     }
@@ -20,7 +20,7 @@ class ExerciseBuilder {
   }
 
   final LanguageContent content;
-  final PinyinLookup lookup;
+  final LanguageTools tools;
   final Map<int, List<Word>> _byLevel = {};
   final Map<int, List<Sentence>> _sentencesByLevel = {};
   late final List<Sentence> _allSentences = content.sentences.values.toList();
@@ -60,9 +60,13 @@ class ExerciseBuilder {
       ChoiceKind.listenWord,
     ];
     for (var i = 0; i < words.length; i++) {
+      final articleTurn =
+          content.pack.hasGender && words[i].article != null && i % 3 == 1;
       out.add(
         _choice(
-          kinds[(i + rnd.nextInt(2)) % kinds.length],
+          articleTurn
+              ? ChoiceKind.article
+              : kinds[(i + rnd.nextInt(2)) % kinds.length],
           words[i],
           rnd,
           Phase.review,
@@ -126,6 +130,14 @@ class ExerciseBuilder {
       }
     }
 
+    if (content.pack.hasGender) {
+      final nouns = words.where((w) => w.article != null).toList()
+        ..shuffle(rnd);
+      for (final w in nouns.take(3)) {
+        out.add(_choice(ChoiceKind.article, w, rnd, Phase.recall));
+      }
+    }
+
     // Speak: say a handful of the new words aloud.
     final speakWords = ([...words]..shuffle(rnd)).take(min(5, words.length));
     for (final w in speakWords) {
@@ -137,6 +149,12 @@ class ExerciseBuilder {
       final limit = level <= 3 ? 3 : 2;
       for (final pick in _writingPicks(words, limit)) {
         out.add(WriteExercise(char: pick.$1, word: pick.$2));
+      }
+    }
+
+    if (!content.pack.hasStrokeWriting && content.pack.typingPractice) {
+      for (final w in _typingPicks(words, level <= 2 ? 4 : 3, rnd)) {
+        out.add(TypeExercise(word: w));
       }
     }
 
@@ -156,6 +174,18 @@ class ExerciseBuilder {
         if (content.sentences[id] != null) content.sentences[id]!,
     ]..sort((a, b) => a.text.length.compareTo(b.text.length));
     return ss.isEmpty ? null : ss.first;
+  }
+
+  /// Up to [limit] words worth spelling out, mixing short and longer ones.
+  List<Word> _typingPicks(List<Word> words, int limit, Random rnd) {
+    final spellable = [
+      for (final w in words)
+        if (w.lemma.length >= 3 &&
+            w.lemma.length <= 16 &&
+            RegExp(r'^[A-Za-zÄÖÜäöüß]+$').hasMatch(w.lemma))
+          w,
+    ]..shuffle(rnd);
+    return spellable.take(limit).toList();
   }
 
   /// Up to [limit] (character, word) pairs worth writing, easiest first.
@@ -269,8 +299,13 @@ class ExerciseBuilder {
   }
 
   OrderExercise? _orderFromSentence(Sentence s, Random rnd) {
-    if (RegExp(r'[0-9A-Za-z]').hasMatch(s.text)) return null;
-    final tiles = lookup.segment(s.text);
+    // Digits never make good tiles; Latin letters only matter for hanzi text.
+    if (RegExp(r'[0-9]').hasMatch(s.text)) return null;
+    if (content.pack.script == 'hanzi' &&
+        RegExp(r'[A-Za-z]').hasMatch(s.text)) {
+      return null;
+    }
+    final tiles = tools.segment(s.text);
     if (tiles.length < 3 || tiles.length > 8) return null;
     final bank = [...tiles]..shuffle(rnd);
     if (_same(bank, tiles)) bank.shuffle(rnd);
@@ -399,6 +434,20 @@ class ExerciseBuilder {
   // ---- multiple choice --------------------------------------------------
 
   ChoiceExercise _choice(ChoiceKind kind, Word word, Random rnd, Phase phase) {
+    if (kind == ChoiceKind.article) {
+      const articles = ['der', 'die', 'das'];
+      final answer = articles.indexOf(word.article ?? '');
+      if (answer >= 0) {
+        return ChoiceExercise(
+          kind: kind,
+          word: word,
+          options: articles,
+          answerIndex: answer,
+          phase: phase,
+        );
+      }
+      return _choice(ChoiceKind.listenMeaning, word, rnd, phase);
+    }
     if (kind == ChoiceKind.listenRomanization) {
       final variants = toneVariants(
         word.romanizationNumeric,

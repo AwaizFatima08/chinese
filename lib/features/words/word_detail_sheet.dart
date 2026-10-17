@@ -48,7 +48,7 @@ class WordDetailSheet extends ConsumerWidget {
         shrinkWrap: true,
         children: [
           Center(
-            child: ToneScript(
+            child: ScriptText(
               word.text,
               romanization: word.romanization,
               style: const TextStyle(fontSize: 72, height: 1.15),
@@ -92,7 +92,7 @@ class WordDetailSheet extends ConsumerWidget {
             for (final s in examples)
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                title: ToneScript(
+                title: ScriptText(
                   s.text,
                   textAlign: TextAlign.start,
                   style: const TextStyle(fontSize: 22),

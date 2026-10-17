@@ -82,6 +82,7 @@ class _ChoiceViewState extends ConsumerState<ChoiceView> with _PicksOne {
       ChoiceKind.meaningWord => l.exMeaningChoose,
       ChoiceKind.listenWord => l.exListenWord,
       ChoiceKind.listenRomanization => l.exListenRoman(label),
+      ChoiceKind.article => l.exArticleChoose,
     };
   }
 
@@ -117,20 +118,40 @@ class _ChoiceViewState extends ConsumerState<ChoiceView> with _PicksOne {
           ),
           if (answered && ex.kind != ChoiceKind.listenRomanization) ...[
             const SizedBox(height: 12),
-            ToneScript(
+            ScriptText(
               ex.word.text,
               romanization: ex.word.romanization,
+              article: ex.word.article,
               style: const TextStyle(fontSize: 40),
             ),
           ],
         ],
       );
+    } else if (ex.kind == ChoiceKind.article) {
+      prompt = Column(
+        children: [
+          ScriptText(
+            answered ? ex.word.text : ex.word.lemma,
+            article: answered ? ex.word.article : null,
+            style: const TextStyle(fontSize: 48, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            ex.word.primaryMeaning,
+            textAlign: TextAlign.center,
+            style: context.text.titleMedium,
+          ),
+          const SizedBox(height: 12),
+          SpeakButton(text: ex.word.lemma, size: 52),
+        ],
+      );
     } else if (ex.kind == ChoiceKind.readMeaning) {
       prompt = Column(
         children: [
-          ToneScript(
+          ScriptText(
             ex.word.text,
             romanization: ex.word.romanization,
+            article: ex.word.article,
             style: const TextStyle(
               fontSize: 64,
               height: 1.2,
@@ -177,7 +198,16 @@ class _ChoiceViewState extends ConsumerState<ChoiceView> with _PicksOne {
         const SizedBox(height: 20),
         Center(child: prompt),
         const SizedBox(height: 28),
-        if (ex.optionsAreScript)
+        if (ex.kind == ChoiceKind.article)
+          Row(
+            children: [
+              for (var i = 0; i < options.length; i++) ...[
+                if (i > 0) const SizedBox(width: 10),
+                Expanded(child: options[i]),
+              ],
+            ],
+          )
+        else if (ex.optionsAreScript)
           GridView.count(
             crossAxisCount: 2,
             mainAxisSpacing: 12,
@@ -265,7 +295,7 @@ class _SentenceChoiceViewState extends ConsumerState<SentenceChoiceView>
                     ],
                   )
                 else ...[
-                  ToneScript(
+                  ScriptText(
                     s.text,
                     style: const TextStyle(fontSize: 30, height: 1.35),
                   ),

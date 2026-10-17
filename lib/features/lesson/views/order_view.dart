@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/providers.dart';
 import '../../../core/theme/app_theme.dart';
-import '../../../core/util/pinyin.dart';
 import '../../../core/widgets/speak_button.dart';
 import '../../../core/widgets/tone_text.dart';
 import '../../../data/settings.dart';
@@ -64,8 +63,7 @@ class _OrderViewState extends ConsumerState<OrderView> {
   String? _tilePinyin(String tile) {
     final settings = ref.read(settingsProvider);
     if (settings.romanization == RomanizationMode.hidden) return null;
-    final numeric = ref.read(pinyinLookupProvider)?.numericOf(tile);
-    return numeric == null ? null : markPinyin(numeric);
+    return ref.read(languageToolsProvider)?.romanizeTile(tile);
   }
 
   Widget _tile(int bankIndex, {required bool inAnswer}) {
@@ -176,7 +174,7 @@ class _OrderViewState extends ConsumerState<OrderView> {
           Center(
             child: Column(
               children: [
-                ToneScript(_ex.fullText, style: const TextStyle(fontSize: 26)),
+                ScriptText(_ex.fullText, style: const TextStyle(fontSize: 26)),
                 RomanText(
                   _ex.romanization,
                   style: const TextStyle(fontSize: 16),

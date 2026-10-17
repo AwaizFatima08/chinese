@@ -106,43 +106,57 @@ class SettingsScreen extends ConsumerWidget {
                 ? () => unawaited(
                     ref
                         .read(speakerProvider)
-                        .speak('你好！欢迎学习中文。', slow: s.slowSpeech),
+                        .speak(
+                          content.pack.voiceTestPhrase,
+                          slow: s.slowSpeech,
+                        ),
                   )
                 : openVoiceSettings,
           ),
           _Section(l.setDisplay),
-          ListTile(
-            leading: const Icon(Icons.abc_rounded),
-            title: Text(l.setRoman(content.pack.romanizationLabel)),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: SegmentedButton<RomanizationMode>(
-                showSelectedIcon: false,
-                segments: [
-                  ButtonSegment(
-                    value: RomanizationMode.always,
-                    label: Text(l.setRomanAlways),
-                  ),
-                  ButtonSegment(
-                    value: RomanizationMode.tapToReveal,
-                    label: Text(l.setRomanTap),
-                  ),
-                  ButtonSegment(
-                    value: RomanizationMode.hidden,
-                    label: Text(l.setRomanHidden),
-                  ),
-                ],
-                selected: {s.romanization},
-                onSelectionChanged: (v) =>
-                    notifier.update((x) => x.copyWith(romanization: v.first)),
+          if (content.pack.hasRomanization)
+            ListTile(
+              leading: const Icon(Icons.abc_rounded),
+              title: Text(l.setRoman(content.pack.romanizationLabel)),
+              subtitle: Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: SegmentedButton<RomanizationMode>(
+                  showSelectedIcon: false,
+                  segments: [
+                    ButtonSegment(
+                      value: RomanizationMode.always,
+                      label: Text(l.setRomanAlways),
+                    ),
+                    ButtonSegment(
+                      value: RomanizationMode.tapToReveal,
+                      label: Text(l.setRomanTap),
+                    ),
+                    ButtonSegment(
+                      value: RomanizationMode.hidden,
+                      label: Text(l.setRomanHidden),
+                    ),
+                  ],
+                  selected: {s.romanization},
+                  onSelectionChanged: (v) =>
+                      notifier.update((x) => x.copyWith(romanization: v.first)),
+                ),
               ),
             ),
-          ),
-          if (content.pack.hasTones)
+          if (content.pack.colorCoding != null)
             SwitchListTile(
               secondary: const Icon(Icons.palette_outlined),
-              title: Text(l.setToneColors),
-              subtitle: Text(l.setToneColorsBody),
+              title: Text(
+                l.setColorHints(
+                  content.pack.colorCoding == 'genders'
+                      ? l.setFeatureGenders
+                      : l.setFeatureTones,
+                ),
+              ),
+              subtitle: Text(
+                content.pack.colorCoding == 'genders'
+                    ? l.setColorGendersBody
+                    : l.setColorTonesBody,
+              ),
               value: s.toneColors,
               onChanged: (v) =>
                   notifier.update((x) => x.copyWith(toneColors: v)),
@@ -223,12 +237,12 @@ class SettingsScreen extends ConsumerWidget {
         child: Consumer(
           builder: (context, ref, _) {
             final reg = ref.watch(languageRegistryProvider).value;
-            final available = reg?.available ?? ['zh'];
+            final available = reg?.available ?? const <LanguageSummary>[];
             return ListView(
               shrinkWrap: true,
               children: [
-                for (final id in available)
-                  _LanguageTile(id: id, selected: id == current),
+                for (final lang in available)
+                  _LanguageTile(lang: lang, selected: lang.id == current),
                 const Divider(),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
@@ -254,28 +268,21 @@ class SettingsScreen extends ConsumerWidget {
 }
 
 class _LanguageTile extends ConsumerWidget {
-  const _LanguageTile({required this.id, required this.selected});
+  const _LanguageTile({required this.lang, required this.selected});
 
-  final String id;
+  final LanguageSummary lang;
   final bool selected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final content = ref.watch(contentProvider).value;
-    final name = content != null && content.pack.id == id
-        ? '${content.pack.name} · ${content.pack.nativeName}'
-        : id;
     return ListTile(
-      leading: Text(
-        content != null && content.pack.id == id ? content.pack.flag : '',
-        style: const TextStyle(fontSize: 28),
-      ),
-      title: Text(name),
+      leading: Text(lang.flag, style: const TextStyle(fontSize: 28)),
+      title: Text('${lang.name} · ${lang.nativeName}'),
       trailing: selected ? const Icon(Icons.check_circle_rounded) : null,
       onTap: () async {
         await ref
             .read(settingsProvider.notifier)
-            .update((s) => s.copyWith(languageId: id));
+            .update((s) => s.copyWith(languageId: lang.id));
         if (context.mounted) Navigator.of(context).pop();
       },
     );

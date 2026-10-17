@@ -20,6 +20,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.successContainer,
     required this.warning,
     required this.tones,
+    required this.genders,
     required this.gold,
   });
 
@@ -30,6 +31,9 @@ class AppColors extends ThemeExtension<AppColors> {
 
   /// Colours for tones 1-4 and neutral (index 4).
   final List<Color> tones;
+
+  /// Colours for the articles der, die, das (in that order).
+  final List<Color> genders;
   final Color gold;
 
   static const light = AppColors(
@@ -43,6 +47,11 @@ class AppColors extends ThemeExtension<AppColors> {
       Color(0xFF2F8F4E), // 3 dip
       Color(0xFF2D6CC0), // 4 falling
       Color(0xFF6B6B6B), // neutral
+    ],
+    genders: [
+      Color(0xFF2D6CC0), // der (masculine) blue
+      Color(0xFFC62F4A), // die (feminine) red
+      Color(0xFF2F8F4E), // das (neuter) green
     ],
     gold: Brand.gold,
   );
@@ -59,8 +68,17 @@ class AppColors extends ThemeExtension<AppColors> {
       Color(0xFF8FB8FF),
       Color(0xFFB5B5B5),
     ],
+    genders: [Color(0xFF8FB8FF), Color(0xFFFF8FA3), Color(0xFF7FD79B)],
     gold: Brand.gold,
   );
+
+  /// Colour for the article [article] (`der`, `die`, `das`), or null.
+  Color? genderColor(String article) => switch (article.toLowerCase()) {
+    'der' => genders[0],
+    'die' => genders[1],
+    'das' => genders[2],
+    _ => null,
+  };
 
   /// Colour for [tone] (1-4; anything else is neutral).
   Color toneColor(int tone) => tones[(tone >= 1 && tone <= 4) ? tone - 1 : 4];
@@ -72,6 +90,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? successContainer,
     Color? warning,
     List<Color>? tones,
+    List<Color>? genders,
     Color? gold,
   }) => AppColors(
     success: success ?? this.success,
@@ -79,6 +98,7 @@ class AppColors extends ThemeExtension<AppColors> {
     successContainer: successContainer ?? this.successContainer,
     warning: warning ?? this.warning,
     tones: tones ?? this.tones,
+    genders: genders ?? this.genders,
     gold: gold ?? this.gold,
   );
 

@@ -8,18 +8,23 @@ import '../util/pinyin.dart';
 
 final RegExp _han = RegExp(r'[一-鿿]');
 
-/// Script text (hanzi) coloured by tone when [romanization] lines up
-/// character-for-character with the text.
-class ToneScript extends ConsumerWidget {
-  const ToneScript(
+/// Script text coloured as a learning aid: Chinese by tone when
+/// [romanization] lines up character-for-character with the text, and a
+/// German noun's [article] by gender.
+class ScriptText extends ConsumerWidget {
+  const ScriptText(
     this.text, {
     super.key,
     this.romanization,
+    this.article,
     this.style,
     this.textAlign = TextAlign.center,
   });
 
   final String text;
+
+  /// The noun's article (`der`, `die`, `das`) when [text] starts with it.
+  final String? article;
 
   /// Tone-marked pinyin, syllables separated by spaces.
   final String? romanization;
@@ -32,7 +37,26 @@ class ToneScript extends ConsumerWidget {
     final base = (style ?? DefaultTextStyle.of(context).style);
     final colors = context.appColors;
     final r = romanization;
-    if (!colorize || r == null) {
+    final art = article;
+    if (colorize && art != null && text.startsWith('$art ')) {
+      final tint = colors.genderColor(art);
+      if (tint != null) {
+        return Text.rich(
+          TextSpan(
+            style: base,
+            children: [
+              TextSpan(
+                text: art,
+                style: TextStyle(color: tint, fontWeight: FontWeight.w700),
+              ),
+              TextSpan(text: text.substring(art.length)),
+            ],
+          ),
+          textAlign: textAlign,
+        );
+      }
+    }
+    if (!colorize || r == null || r.isEmpty) {
       return Text(text, style: base, textAlign: textAlign);
     }
     final syl = syllables(r);
@@ -97,6 +121,7 @@ class _RomanTextState extends ConsumerState<RomanText> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.romanization.isEmpty) return const SizedBox.shrink();
     final settings = ref.watch(settingsProvider);
     final mode = widget.forceShow
         ? RomanizationMode.always

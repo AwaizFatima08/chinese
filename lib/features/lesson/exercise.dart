@@ -49,6 +49,9 @@ enum ChoiceKind {
 
   /// Hear the word, pick the romanization with the right tones.
   listenRomanization,
+
+  /// See a noun without its article, pick der, die or das.
+  article,
 }
 
 class ChoiceExercise extends Exercise {
@@ -78,7 +81,9 @@ class ChoiceExercise extends Exercise {
 
   /// Options that are script (large type) rather than English.
   bool get optionsAreScript =>
-      kind == ChoiceKind.meaningWord || kind == ChoiceKind.listenWord;
+      kind == ChoiceKind.meaningWord ||
+      kind == ChoiceKind.listenWord ||
+      kind == ChoiceKind.article;
 }
 
 class SpeakExercise extends Exercise {
@@ -97,6 +102,19 @@ class WriteExercise extends Exercise {
   const WriteExercise({required this.char, required this.word});
 
   final String char;
+  final Word word;
+
+  @override
+  Phase get phase => Phase.write;
+
+  @override
+  Set<int> get wordIds => {word.id};
+}
+
+/// Hear a word and type it (spelling practice for alphabetic languages).
+class TypeExercise extends Exercise {
+  const TypeExercise({required this.word});
+
   final Word word;
 
   @override

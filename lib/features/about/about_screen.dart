@@ -68,7 +68,7 @@ class AboutScreen extends ConsumerWidget {
               ),
           const SizedBox(height: 8),
           OutlinedButton(
-            onPressed: () => _showLicenceText(context),
+            onPressed: () => _showLicenceText(context, ref),
             child: Text(l.aboutLicenceText),
           ),
           const SizedBox(height: 12),
@@ -82,13 +82,9 @@ class AboutScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _showLicenceText(BuildContext context) async {
-    const files = [
-      'assets/licenses/data-credits.txt',
-      'assets/licenses/complete-hsk-vocabulary-MIT.txt',
-      'assets/licenses/makemeahanzi.txt',
-      'assets/licenses/arphic-public-license.txt',
-    ];
+  Future<void> _showLicenceText(BuildContext context, WidgetRef ref) async {
+    final pack = ref.read(contentProvider).value?.pack;
+    final files = pack?.licenseFiles ?? const <String>[];
     final texts = [for (final f in files) await rootBundle.loadString(f)];
     if (!context.mounted) return;
     await showDialog<void>(

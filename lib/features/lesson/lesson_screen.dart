@@ -19,6 +19,7 @@ import 'views/grammar_view.dart';
 import 'views/intro_view.dart';
 import 'views/order_view.dart';
 import 'views/speak_view.dart';
+import 'views/type_view.dart';
 import 'views/write_view.dart';
 
 /// Hard ceiling on a day's study, in seconds (15 minutes).
@@ -171,6 +172,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
     ChoiceExercise() => ChoiceView(exercise: ex, onAnswered: _onAnswered),
     SpeakExercise() => SpeakView(exercise: ex, onAnswered: _onAnswered),
     WriteExercise() => WriteView(exercise: ex, onAnswered: _onAnswered),
+    TypeExercise() => TypeView(exercise: ex, onAnswered: _onAnswered),
     SentenceChoiceExercise() => SentenceChoiceView(
       exercise: ex,
       onAnswered: _onAnswered,
@@ -189,6 +191,7 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
 
   bool _isScored(Exercise ex) =>
       ex is ChoiceExercise ||
+      ex is TypeExercise ||
       ex is SentenceChoiceExercise ||
       ex is OrderExercise ||
       ex is GrammarChoiceExercise;

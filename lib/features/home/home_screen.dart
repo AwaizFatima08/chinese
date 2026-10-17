@@ -37,7 +37,7 @@ class HomeScreen extends ConsumerWidget {
     }
     final settings = ref.watch(settingsProvider);
     final level =
-        c.levels['hsk${settings.levelFor(c.pack.id)}'] ?? c.levels.values.first;
+        c.levelByNumber(settings.levelFor(c.pack.id)) ?? c.levels.values.first;
     final logic = PathLogic(p, unlockAll: settings.unlockAll);
     final next = logic.nextLesson(level);
     final goal = settings.dailyGoalMinutes;

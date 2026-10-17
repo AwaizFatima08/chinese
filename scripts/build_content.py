@@ -302,8 +302,8 @@ def pick_sentences(words, pairs, seg: Segmenter):
             if sid not in used:
                 zh, en, toks, lvl = sentence_rows[sid]
                 used[sid] = {
-                    "id": sid, "zh": zh, "en": en,
-                    "py": seg.sentence_pinyin(zh), "lvl": lvl,
+                    "id": sid, "t": zh, "en": en,
+                    "r": seg.sentence_pinyin(zh), "lvl": lvl,
                     "w": [by_word[t]["id"] for t in toks if t in by_word],
                 }
             ids.append(sid)
@@ -330,11 +330,11 @@ def load_grammar(seg: Segmenter):
         points = json.load(f)
     for p in points:
         for ex in p.get("examples", []):
-            if "py" not in ex:
-                ex["py"] = seg.sentence_pinyin(ex["zh"])
+            if "r" not in ex:
+                ex["r"] = seg.sentence_pinyin(ex["t"])
         for q in p.get("quiz", []):
             if q.get("type") == "order":
-                q.setdefault("py", seg.sentence_pinyin(q["answer"]))
+                q.setdefault("r", seg.sentence_pinyin(q["answer"]))
                 q["tokens"] = [t for t in seg.tokens(q["answer"]) if t not in PUNCT]
     log(f"grammar: {len(points)} points")
     return points

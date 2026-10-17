@@ -240,7 +240,20 @@
   },
   "exSpokenGreat": "Great pronunciation!",
   "exSpokenTone": "Right sounds. Check the tone and try again.",
+  "exSpokenClose": "Close! Check the article or a letter and try again.",
   "exSpokenMiss": "Not quite. Listen and try again.",
+  "exArticleChoose": "Which article goes with this noun?",
+  "exTypeTitle": "Type what you hear",
+  "exTypeField": "Type the word",
+  "exTypeSpelled": "Spelled: {text}",
+  "@exTypeSpelled": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "exTypeHint": "Nouns start with a capital letter.",
   "exSpokenNothing": "I did not hear anything. Try again.",
   "exSelfCheckBody": "Speech check is not available on this phone. Listen, say it aloud, then tap below.",
   "exSelfCheckDone": "I said it",
@@ -340,8 +353,18 @@
   "setRomanAlways": "Always",
   "setRomanTap": "Tap to reveal",
   "setRomanHidden": "Hidden",
-  "setToneColors": "Colour the tones",
-  "setToneColorsBody": "Each tone gets its own colour. The marks are always shown too.",
+  "setColorHints": "Colour the {feature}",
+  "@setColorHints": {
+    "placeholders": {
+      "feature": {
+        "type": "String"
+      }
+    }
+  },
+  "setFeatureTones": "tones",
+  "setFeatureGenders": "genders",
+  "setColorTonesBody": "Each tone gets its own colour. The marks are always shown too.",
+  "setColorGendersBody": "der is blue, die is red, das is green. The words are always shown too.",
   "setHaptics": "Vibration feedback",
   "setPath": "Path",
   "setUnlockAll": "Open all lessons",
