@@ -8,8 +8,11 @@
 - AdMob: app and three units created, ids in `.secrets/ad-units.env`. app-ads.txt live on homilabs.org and tools.homilabs.org.
 - tools.homilabs.org: Lingo15 card, privacy and terms sections live (privacy URL `https://tools.homilabs.org/privacy#lingo15`).
 
-## Left
-1. Attach `build/app/outputs/bundle/release/app-release.aab` (build with `scripts/build_release.sh`) to the draft production release, then Next, Save, "Send for review".
+## Submitted 2026-10-17
+Bundle 1.0.0 (1) attached to the production release (full rollout, 178 countries) and all 11 changes submitted from Publishing overview. Google's quick checks run first, then review.
+
+## Left (after review)
+1. Watch Publishing overview and the developer email for the review result.
 2. After the app is live: add the Play store link to the AdMob app (AdMob > Apps > Lingo15 > App settings) so ads serve fully, and swap "Coming soon" for the Play link on the tools.homilabs.org card.
 3. Keep `android/key.properties` and `.secrets/lingo15-upload.keystore` safe. They are not in Git or Drive. Play App Signing allows an upload-key reset if lost.
 
