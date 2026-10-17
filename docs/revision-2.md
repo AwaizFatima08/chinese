@@ -21,3 +21,9 @@ Not submitted yet. Version 1.0.0 (build 1) is in review.
 
 ## Already done
 Firebase project, Google sign-in, Firestore database and rules, tools.homilabs.org pages, tests (84 passing).
+
+## Test results (2026-10-17, release build 1.1.0+2 on the Galaxy Tab S9 FE and Samsung A12)
+- Passed on the tablet with the real Firebase project: Google sign-in (account chooser and consent), first sync (Firestore got `shared` and `lang_zh`), restore after clearing app data (streak, minutes, learned word, lesson 1 all came back), sign out (progress stays), sign in again, delete account (Firestore collection empty, Authentication has no users, app back to signed out).
+- A12: Settings section and account chooser work; cancelling is handled. Its Google accounts are other people's, so no sign-in there.
+- Not tested: two devices syncing at the same time, the security rules against a second user, Play-installed build (Play-signing SHA-1 is registered).
+- Optional polish: Google Auth Platform > Branding has no privacy-policy or terms link, so the consent screen shows none. Adding them needs `homilabs.org` as an authorised domain.
