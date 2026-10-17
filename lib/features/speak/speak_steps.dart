@@ -3,7 +3,7 @@ import 'dart:math';
 import 'speak_content.dart';
 
 /// The stage of a practice session; shown as the step label.
-enum SpeakPhase { learn, listen, say, stress, recall, shadow, talk }
+enum SpeakPhase { learn, listen, say, stress, recall, shadow, melody, talk }
 
 /// One short step of a practice set. Plain data; the session screen decides
 /// how to present each kind.
@@ -149,6 +149,17 @@ class VocabRecallStep extends SpeakStep {
   SpeakPhase get phase => SpeakPhase.recall;
 }
 
+/// Copy the melody, rhythm and pace of a sentence; the voice is analysed and
+/// compared with the model's.
+class MelodyStep extends SpeakStep {
+  const MelodyStep({required this.text});
+
+  final String text;
+
+  @override
+  SpeakPhase get phase => SpeakPhase.melody;
+}
+
 /// One turn of a role-play: the partner speaks, the learner answers.
 class TalkTurnStep extends SpeakStep {
   const TalkTurnStep({
@@ -181,6 +192,7 @@ class SpeakStepBuilder {
   static const stressPicks = 8;
   static const stressSays = 3;
   static const reviewWords = 8;
+  static const melodyLines = 5;
 
   List<T> _shuffled<T>(Iterable<T> items) => [...items]..shuffle(_random);
 
@@ -200,6 +212,9 @@ class SpeakStepBuilder {
       case 'sh':
         final s = content.shadowSet(parts[1]);
         return s == null ? const [] : _shadow(s);
+      case 'mel':
+        final s = content.shadowSet(parts[1]);
+        return s == null ? const [] : _melody(s);
       case 'tw':
         return _twisters(int.parse(parts[1]));
       case 'talk':
@@ -315,6 +330,12 @@ class SpeakStepBuilder {
         number: i + 1,
         total: t.turns.length,
       ),
+  ];
+
+  List<SpeakStep> _melody(ShadowSet s) => [
+    TipStep(title: s.title, body: s.tip),
+    for (final line in _shuffled(s.items).take(melodyLines))
+      MelodyStep(text: line),
   ];
 
   List<SpeakStep> _twisters(int n) {

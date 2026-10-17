@@ -19,6 +19,12 @@ import 'package:lingodaily/features/speak/speak_providers.dart';
 import 'package:lingodaily/features/speak/speak_session_screen.dart';
 import 'package:lingodaily/features/speak/speak_steps.dart';
 import 'package:lingodaily/features/speak/talk_view.dart';
+import 'package:lingodaily/features/speak/melody_view.dart';
+import 'package:lingodaily/features/speak/prosody.dart';
+import 'package:lingodaily/core/services/audio_capture.dart';
+import 'package:lingodaily/core/services/speaker.dart';
+import 'package:lingodaily/core/util/pcm.dart';
+import 'helpers/synthetic_voice.dart';
 
 import 'helpers/file_bundle.dart';
 import 'helpers/test_app.dart';
@@ -286,6 +292,119 @@ void main() {
       expect(answers.single, (true, talkFreeScore));
     });
 
+    Future<List<(bool, double)>> pumpMelody(
+      WidgetTester tester, {
+      required List<Pcm?> recordings,
+      bool withModel = true,
+    }) async {
+      tester.view.physicalSize = const Size(720, 1600);
+      tester.view.devicePixelRatio = 2;
+      addTearDown(tester.view.reset);
+      final answers = <(bool, double)>[];
+      final speaker = SilentSpeaker();
+      if (withModel) {
+        speaker.wav = wavBytes(
+          voice(seconds: 2, semitones: riseFall, rate: 24000),
+        );
+      }
+      final t = await makeContainer(
+        capture: ScriptedCapture(script: recordings),
+        speaker: speaker,
+        extraOverrides: [
+          prosodyAnalyzerProvider.overrideWithValue(
+            (pcm) async => extractProsody(pcm),
+          ),
+        ],
+      );
+      addTearDown(t.container.dispose);
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: t.container,
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: MelodyView(
+                step: const MelodyStep(text: 'Are you coming to the party?'),
+                onAnswered: (ok, score, {reveal, vocabId}) =>
+                    answers.add((ok, score)),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 400)),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      return answers;
+    }
+
+    Future<void> tapMelodyMic(WidgetTester tester) async {
+      await tester.tap(find.byKey(const ValueKey('melody-mic')));
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 400)),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+
+    testWidgets('copying the model melody passes', (tester) async {
+      final answers = await pumpMelody(
+        tester,
+        recordings: [voice(seconds: 2.2, base: 200, semitones: riseFall)],
+      );
+      await tapMelodyMic(tester);
+      expect(answers.single.$1, isTrue);
+      expect(find.text('Well matched!'), findsOneWidget);
+    });
+
+    testWidgets('a flat voice is told so and may try again', (tester) async {
+      final answers = await pumpMelody(
+        tester,
+        recordings: [
+          voice(seconds: 2, semitones: (u) => 0),
+          voice(seconds: 2, base: 180, semitones: riseFall),
+        ],
+      );
+      await tapMelodyMic(tester);
+      expect(answers, isEmpty);
+      expect(find.textContaining('too flat'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('melody-again')));
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 400)),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      expect(answers.single.$1, isTrue);
+    });
+
+    testWidgets('a failed recording asks for a clearer voice', (tester) async {
+      final answers = await pumpMelody(tester, recordings: [null]);
+      await tapMelodyMic(tester);
+      expect(answers, isEmpty);
+      expect(
+        find.textContaining('could not hear a clear voice'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('without a model recording the learner marks themselves', (
+      tester,
+    ) async {
+      final answers = await pumpMelody(
+        tester,
+        recordings: const [],
+        withModel: false,
+      );
+      expect(
+        find.textContaining('cannot record the model voice'),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('I said it'));
+      await tester.pump();
+      expect(answers.single.$1, isTrue);
+    });
+
     testWidgets('a clear attempt passes', (tester) async {
       bool? passed;
       await pumpPanel(
@@ -423,6 +542,7 @@ void main() {
         'sh:interview',
         'tw:2',
         'talk:coffee',
+        'mel:interview',
       ]) {
         final router = GoRouter.of(tester.element(find.byType(Scaffold).first));
         unawaited(router.push('/speak/${Uri.encodeComponent(id)}'));

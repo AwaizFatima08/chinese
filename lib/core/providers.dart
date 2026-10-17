@@ -11,6 +11,7 @@ import '../languages/language_tools.dart';
 import 'services/ad_service.dart';
 import 'services/auth_service.dart';
 import 'services/cloud_store.dart';
+import 'services/audio_capture.dart';
 import 'services/listener.dart';
 import 'services/speaker.dart';
 
@@ -43,6 +44,9 @@ extension TodayRef on Ref {
 final speakerProvider = Provider<Speaker>((ref) => DeviceSpeaker());
 final voiceListenerProvider = Provider<VoiceListener>(
   (ref) => DeviceVoiceListener(),
+);
+final audioCaptureProvider = Provider<AudioCapture>(
+  (ref) => DeviceAudioCapture(),
 );
 final adServiceProvider = Provider<AdService>((ref) => const NoAdService());
 

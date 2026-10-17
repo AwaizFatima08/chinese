@@ -10,6 +10,7 @@ A separate tab for people who already speak English and want to sound clearer. W
 | Vocabulary | 15 units, 300 advanced words, definitions + examples (own text) | own text, IPA from CMUdict |
 | Sentences | 112 shadowing lines (rhythm, linking, intonation) | own text |
 | Tongue twisters | 24 | own text |
+| Accent and intonation | the 14 sentence sets again, 5 lines each: copy the model's melody, rhythm and pace | own text; the model voice is the device TTS |
 | Conversations | 9 role-plays x 6 turns (coffee, hotel, directions, interview, doctor, restaurant call, party, returns, airport) | own text |
 
 Build: `python3 scripts/build_speak_content.py` -> `assets/speak/*.json` (needs `data/raw/en/cmudict.dict` from `scripts/fetch_sources.sh`). Edit `content_src/speak/*.py`, never the JSON.
@@ -18,6 +19,15 @@ Build: `python3 scripts/build_speak_content.py` -> `assets/speak/*.json` (needs 
 Device speech recognition (`speech_to_text`) gives text; `pronunciation.dart` aligns it to the target word by word (homophones and contractions normalised, single words need an exact hit, recogniser alternatives count as "close"). That measures clarity (are you understood), not accent as a native ear hears it. The UI says so.
 
 Conversation turns: pick one of three model replies and read it (scored word by word), or switch to "Use your own words": the answer passes when it is 3+ words and contains a topic keyword. Free answers are not pronunciation-scored.
+
+## Accent and intonation check (`prosody.dart`, `melody_view.dart`)
+The learner hears the sentence, then records it. The app does not use speech recognition here: it compares two recordings directly.
+- Model: the device TTS writes the sentence to a WAV (`Speaker.synthesizeWav`, cached in the temp dir). Phones whose engine cannot write a file get a self-check fallback.
+- Learner: `AudioCapture` records 16 kHz mono PCM; an endpointer stops after ~1.1 s of silence following speech, or 6 s of nothing, or 10 s total.
+- Analysis (`extractProsody`, off the main isolate): 8 kHz, 40 ms windows every 10 ms, YIN pitch (64–400 Hz), RMS loudness. Gate for "speech" = max(15% of the loud parts, 4x the quietest tenth, capped at 50% of loud) so a noisy room still works. The loudest stretch of speech is kept (clicks before/after are dropped).
+- Comparison (`compareProsody`): pitch in semitones around each speaker's own median, so a child and a deep voice compare alike; 64-point curves; DTW with an 8% band. Melody = correlation + distance + whether the end rises or falls alike; rhythm = loudness peaks (≈ syllables) falling in the same places + similar count; pace = duration ratio. Issues in order: too slow/fast (pace outside 0.7–1.5), flat (pitch range < 40% of model), melody < 0.7, rhythm < 0.6.
+- Measured on the A12: a loopback of the model voice scores melody 0.97 / rhythm 0.90; different sentences of the same voice score 0.55–0.91 / 0.53–0.76; the same recording 15% faster or slower still passes. Analysis takes 100–600 ms.
+- Limits: it judges melody, rhythm and pace, not vowel/consonant quality (the Sounds section does that by recognition). A whispered or very quiet take is reported as "no clear voice". Phone speakers at low volume may not produce a usable model recording — only a problem for the loopback test, not for a person.
 
 ## Why no live AI conversation
 Decided with the owner: free, no cloud AI, no per-use cost. Scripted role-plays give the structure of a conversation partner with zero running cost and nothing sent off the phone.

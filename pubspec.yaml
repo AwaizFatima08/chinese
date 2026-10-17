@@ -31,6 +31,8 @@ dependencies:
   firebase_auth: ^7.0.0
   cloud_firestore: ^7.0.0
   google_sign_in: ^7.2.0
+  record: ^6.2.1
+  path_provider: ^2.1.6
 
 dev_dependencies:
   flutter_test:

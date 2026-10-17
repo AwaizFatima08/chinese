@@ -176,6 +176,11 @@ class _GroupTile extends StatelessWidget {
         l.speakSecTwistersBody,
         Icons.speed_rounded,
       ),
+      SetKind.melody => (
+        l.speakSecMelody,
+        l.speakSecMelodyBody,
+        Icons.show_chart_rounded,
+      ),
       SetKind.talk => (l.speakSecTalk, l.speakSecTalkBody, Icons.forum_rounded),
       SetKind.review => ('', '', Icons.replay_rounded),
     };

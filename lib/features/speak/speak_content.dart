@@ -255,7 +255,7 @@ class Talk {
 }
 
 /// What a practice set trains; also its section on the Speak tab.
-enum SetKind { sounds, stress, vocab, shadow, twister, talk, review }
+enum SetKind { sounds, stress, vocab, shadow, melody, twister, talk, review }
 
 /// One short practice session shown on the Speak tab.
 @immutable
@@ -443,6 +443,18 @@ class SpeakContent {
             PracticeSet(
               id: 'sh:${s.id}',
               kind: SetKind.shadow,
+              title: s.title,
+              subtitle: s.items.first,
+            ),
+        ],
+      ),
+      PracticeGroup(
+        kind: SetKind.melody,
+        sets: [
+          for (final s in shadow)
+            PracticeSet(
+              id: 'mel:${s.id}',
+              kind: SetKind.melody,
               title: s.title,
               subtitle: s.items.first,
             ),

@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// Speaks text aloud: the "teacher voice".
 abstract class Speaker {
@@ -27,6 +30,11 @@ abstract class Speaker {
 
   /// Whether this device has a voice for [locale].
   Future<bool> hasVoiceFor(String locale);
+
+  /// The voice reading [text] as a WAV recording, or null when the engine
+  /// cannot write one. Uses the same rate as [speakIn], so it sounds like
+  /// what the learner just heard.
+  Future<Uint8List?> synthesizeWav(String text, String locale);
 
   Future<void> stop();
 }
@@ -146,6 +154,36 @@ class DeviceSpeaker implements Speaker {
   }
 
   @override
+  Future<Uint8List?> synthesizeWav(String text, String locale) async {
+    if (!_ready || text.trim().isEmpty) return null;
+    try {
+      final dir = Directory(
+        '${(await getTemporaryDirectory()).path}/speak_ref',
+      );
+      await dir.create(recursive: true);
+      final name =
+          '${locale}_${text.hashCode.toUnsigned(32).toRadixString(16)}';
+      final file = File('${dir.path}/$name.wav');
+      if (await file.exists() && await file.length() > 1000) {
+        return await file.readAsBytes();
+      }
+      if (_active != locale) {
+        await _tts.setLanguage(locale);
+        _active = locale;
+      }
+      await _tts.setSpeechRate(0.45);
+      await _tts.awaitSynthCompletion(true);
+      final result = await _tts.synthesizeToFile(text, file.path, true);
+      if ((result != 1 && result != true) || !await file.exists()) return null;
+      final bytes = await file.readAsBytes();
+      return bytes.length > 1000 ? bytes : null;
+    } on Object catch (e) {
+      debugPrint('TTS synthesize failed: $e');
+      return null;
+    }
+  }
+
+  @override
   Future<void> stop() async {
     _token++;
     _speaking.value = false;
@@ -185,6 +223,12 @@ class SilentSpeaker implements Speaker {
 
   @override
   Future<bool> hasVoiceFor(String locale) async => false;
+
+  /// Set by tests that need a model recording.
+  Uint8List? wav;
+
+  @override
+  Future<Uint8List?> synthesizeWav(String text, String locale) async => wav;
 
   @override
   Future<void> stop() async {}

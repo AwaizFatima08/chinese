@@ -16,6 +16,7 @@ import '../progress/progress_state.dart';
 import 'speak_providers.dart';
 import 'speak_steps.dart';
 import 'step_views.dart';
+import 'melody_view.dart';
 import 'talk_view.dart';
 
 /// Runs one practice set: a short series of listening, speaking and
@@ -222,6 +223,7 @@ class _SpeakSessionScreenState extends ConsumerState<SpeakSessionScreen>
       SpeakPhase.stress => l.speakPhaseStress,
       SpeakPhase.recall => l.speakPhaseRecall,
       SpeakPhase.shadow => l.speakPhaseShadow,
+      SpeakPhase.melody => l.speakPhaseMelody,
       SpeakPhase.talk => l.speakPhaseTalk,
     };
   }
@@ -234,6 +236,7 @@ class _SpeakSessionScreenState extends ConsumerState<SpeakSessionScreen>
     StressPickStep() => StressPickView(step: step, onAnswered: _onAnswered),
     VocabIntroStep() => VocabIntroView(step: step),
     VocabRecallStep() => VocabRecallView(step: step, onAnswered: _onAnswered),
+    MelodyStep() => MelodyView(step: step, onAnswered: _onAnswered),
     TalkTurnStep() => TalkTurnView(step: step, onAnswered: _onAnswered),
   };
 

@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/providers.dart';
+import '../../core/util/pcm.dart';
 import '../../data/progress_models.dart';
+import 'prosody.dart';
 import 'speak_content.dart';
 
 /// Spoken-English progress is saved under this language id.
@@ -37,3 +40,10 @@ final speakProgressProvider = FutureProvider<SpeakProgress>((ref) async {
     words: await repo.wordProgress(speakLanguage),
   );
 });
+
+/// Reads pitch and loudness from a recording. Runs off the main isolate so
+/// the screen stays smooth; tests replace it with a direct call.
+final prosodyAnalyzerProvider = Provider<Future<Prosody> Function(Pcm)>(
+  (ref) =>
+      (pcm) => compute(extractProsody, pcm),
+);
