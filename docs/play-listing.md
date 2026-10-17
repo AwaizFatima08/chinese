@@ -1,9 +1,9 @@
 # Play listing: Lingo15 (com.homilabs.lingo15)
 
-Console app id 4974727162267848659. Privacy policy: https://tools.homilabs.org/lingo15/privacy-policy
+Console app id 4974727162267848659. Privacy policy: https://tools.homilabs.org/lingo15/privacy-policy (set in Play on 2026-10-17)
 
 ## App name (max 30)
-Lingo15: Learn a language
+Lingo15: Learn A Language
 
 ## Short description (max 80)
 Chinese, German and English speaking practice in short lessons, 15 min a day.
