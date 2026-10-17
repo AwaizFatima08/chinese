@@ -1,0 +1,12 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // One backup per signed-in user: users/{uid}/backup/{shared | lang_<id>}
+    match /users/{uid}/backup/{docId} {
+      allow read, delete: if request.auth != null && request.auth.uid == uid;
+      allow create, update: if request.auth != null && request.auth.uid == uid
+        && docId.matches('shared|lang_[a-z]{2,3}')
+        && request.resource.size() < 900000;
+    }
+  }
+}

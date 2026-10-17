@@ -7,6 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app.dart';
 import 'core/providers.dart';
 import 'core/services/ad_service.dart';
+import 'core/services/auth_service.dart';
+import 'core/services/cloud_store.dart';
+import 'core/services/firebase_setup.dart';
 import 'data/app_database.dart';
 
 Future<void> main() async {
@@ -19,12 +22,19 @@ Future<void> main() async {
       };
       final prefs = await SharedPreferences.getInstance();
       final database = await AppDatabase.open();
+      final firebaseReady = await initFirebase();
       runApp(
         ProviderScope(
           overrides: [
             sharedPreferencesProvider.overrideWithValue(prefs),
             appDatabaseProvider.overrideWithValue(database),
             adServiceProvider.overrideWithValue(AdMobService()),
+            if (firebaseReady) ...[
+              authServiceProvider.overrideWithValue(
+                FirebaseAuthService(serverClientId: firebaseWebClientId),
+              ),
+              cloudStoreProvider.overrideWithValue(FirestoreCloudStore()),
+            ],
           ],
           child: const LingoDailyApp(),
         ),

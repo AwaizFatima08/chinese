@@ -26,3 +26,6 @@ data/raw/
 
 # OS
 .DS_Store
+
+# Firebase config for this project (kept out of git; see docs/firebase.md)
+android/app/google-services.json

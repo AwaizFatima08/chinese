@@ -125,6 +125,7 @@ class ProgressNotifier extends AsyncNotifier<ProgressSnapshot> {
       reviews: r.completed && r.lessonId == null ? 1 : 0,
     );
     await _refresh();
+    ref.read(syncHooksProvider).onProgressSaved?.call();
   }
 
   /// Marks [day] as covered by a streak freeze (after a rewarded ad).
@@ -134,13 +135,16 @@ class ProgressNotifier extends AsyncNotifier<ProgressSnapshot> {
   }
 
   Future<void> resetLanguage() async {
-    await _repo.resetLanguage(_lang);
+    final lang = _lang;
+    await _repo.resetLanguage(lang);
     await _refresh();
+    ref.read(syncHooksProvider).onReset?.call(lang);
   }
 
   Future<void> resetEverything() async {
     await _repo.resetEverything();
     await _refresh();
+    ref.read(syncHooksProvider).onReset?.call(null);
   }
 }
 

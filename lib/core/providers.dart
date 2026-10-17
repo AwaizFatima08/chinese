@@ -9,6 +9,8 @@ import '../data/settings.dart';
 import '../languages/language_content.dart';
 import '../languages/language_tools.dart';
 import 'services/ad_service.dart';
+import 'services/auth_service.dart';
+import 'services/cloud_store.dart';
 import 'services/listener.dart';
 import 'services/speaker.dart';
 
@@ -43,6 +45,25 @@ final voiceListenerProvider = Provider<VoiceListener>(
   (ref) => DeviceVoiceListener(),
 );
 final adServiceProvider = Provider<AdService>((ref) => const NoAdService());
+
+/// Optional Google sign-in; overridden in `main()` when Firebase is set up.
+final authServiceProvider = Provider<AuthService>(
+  (ref) => const NoAuthService(),
+);
+
+/// Where backups are stored; overridden in `main()` when Firebase is set up.
+final cloudStoreProvider = Provider<CloudStore>((ref) => const NoCloudStore());
+
+/// Lets progress code tell the account controller something changed without
+/// importing it (the controller registers the handlers).
+class SyncHooks {
+  void Function()? onProgressSaved;
+
+  /// [language] is null when everything was reset.
+  void Function(String? language)? onReset;
+}
+
+final syncHooksProvider = Provider<SyncHooks>((ref) => SyncHooks());
 
 // ---- data ---------------------------------------------------------------------
 

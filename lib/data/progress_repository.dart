@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 
 import 'app_database.dart';
+import 'backup.dart';
 import 'progress_models.dart';
 import 'srs.dart';
 
@@ -41,6 +42,13 @@ abstract interface class ProgressRepository {
   Future<Map<String, int>> charactersWritten(String lang);
   Future<void> resetLanguage(String lang);
   Future<void> resetEverything();
+
+  /// Everything stored for cloud backup. Levels are not kept here.
+  Future<ProgressBackup> exportBackup();
+
+  /// Writes [backup] into the store, replacing rows with the same key. Callers
+  /// pass a merge of local and cloud data, so nothing is ever removed.
+  Future<void> importBackup(ProgressBackup backup);
 }
 
 /// [ProgressRepository] stored in the on-device SQLite database.
@@ -282,6 +290,108 @@ class SqliteProgressRepository implements ProgressRepository {
     return {for (final r in rows) r['ch']! as String: r['writes']! as int};
   }
 
+  // ---- backup ----
+
+  @override
+  Future<ProgressBackup> exportBackup() async {
+    final langs = <String, LanguageBackup>{};
+    final wordRows = await _db.query('word_progress');
+    final lessonRows = await _db.query('lesson_progress');
+    final charRows = await _db.query('char_progress');
+    final ids = <String>{
+      for (final r in wordRows) r['lang']! as String,
+      for (final r in lessonRows) r['lang']! as String,
+      for (final r in charRows) r['lang']! as String,
+    };
+    for (final lang in ids) {
+      langs[lang] = LanguageBackup(
+        words: {
+          for (final r in wordRows)
+            if (r['lang'] == lang)
+              r['word_id']! as int: WordProgress(
+                wordId: r['word_id']! as int,
+                box: r['box']! as int,
+                dueDay: r['due_day']! as int,
+                reps: r['reps']! as int,
+                lapses: r['lapses']! as int,
+                lastDay: r['last_day']! as int,
+              ),
+        },
+        lessons: {
+          for (final r in lessonRows)
+            if (r['lang'] == lang)
+              r['lesson_id']! as String: LessonResult(
+                lessonId: r['lesson_id']! as String,
+                stars: r['stars']! as int,
+                completedDay: r['completed_day']! as int,
+                attempts: r['attempts']! as int,
+              ),
+        },
+        characters: {
+          for (final r in charRows)
+            if (r['lang'] == lang) r['ch']! as String: r['writes']! as int,
+        },
+      );
+    }
+    final dayRows = await _db.query('day_log');
+    return ProgressBackup(
+      languages: langs,
+      days: {for (final r in dayRows) r['day']! as int: _toLog(r)},
+      freezes: await freezeDays(),
+    );
+  }
+
+  @override
+  Future<void> importBackup(ProgressBackup backup) async {
+    await _db.transaction((txn) async {
+      final b = txn.batch();
+      for (final lang in backup.languages.entries) {
+        for (final w in lang.value.words.values) {
+          b.insert('word_progress', {
+            'lang': lang.key,
+            'word_id': w.wordId,
+            'box': w.box,
+            'due_day': w.dueDay,
+            'reps': w.reps,
+            'lapses': w.lapses,
+            'last_day': w.lastDay,
+          }, conflictAlgorithm: ConflictAlgorithm.replace);
+        }
+        for (final l in lang.value.lessons.values) {
+          b.insert('lesson_progress', {
+            'lang': lang.key,
+            'lesson_id': l.lessonId,
+            'stars': l.stars,
+            'completed_day': l.completedDay,
+            'attempts': l.attempts,
+          }, conflictAlgorithm: ConflictAlgorithm.replace);
+        }
+        for (final c in lang.value.characters.entries) {
+          b.insert('char_progress', {
+            'lang': lang.key,
+            'ch': c.key,
+            'writes': c.value,
+            'last_day': 0,
+          }, conflictAlgorithm: ConflictAlgorithm.replace);
+        }
+      }
+      for (final d in backup.days.values) {
+        b.insert('day_log', {
+          'day': d.day,
+          'seconds': d.seconds,
+          'lessons': d.lessons,
+          'reviews': d.reviews,
+        }, conflictAlgorithm: ConflictAlgorithm.replace);
+      }
+      for (final day in backup.freezes) {
+        b.insert('streak_freeze', {
+          'day': day,
+        }, conflictAlgorithm: ConflictAlgorithm.ignore);
+      }
+      await b.commit(noResult: true);
+    });
+  }
+
   // ---- reset ----
 
   @override
@@ -468,6 +578,34 @@ class InMemoryProgressRepository implements ProgressRepository {
     _words.remove(lang);
     _lessons.remove(lang);
     _chars.remove(lang);
+  }
+
+  @override
+  Future<ProgressBackup> exportBackup() async {
+    final ids = <String>{..._words.keys, ..._lessons.keys, ..._chars.keys};
+    return ProgressBackup(
+      languages: {
+        for (final id in ids)
+          id: LanguageBackup(
+            words: {...?_words[id]},
+            lessons: {...?_lessons[id]},
+            characters: {...?_chars[id]},
+          ),
+      },
+      days: {..._days},
+      freezes: {..._freezes},
+    );
+  }
+
+  @override
+  Future<void> importBackup(ProgressBackup backup) async {
+    for (final e in backup.languages.entries) {
+      _words.putIfAbsent(e.key, () => {}).addAll(e.value.words);
+      _lessons.putIfAbsent(e.key, () => {}).addAll(e.value.lessons);
+      _chars.putIfAbsent(e.key, () => {}).addAll(e.value.characters);
+    }
+    _days.addAll(backup.days);
+    _freezes.addAll(backup.freezes);
   }
 
   @override

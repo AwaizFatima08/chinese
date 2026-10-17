@@ -181,6 +181,28 @@ S = [
  ("setResetConfirm", "Reset", {}),
  ("setResetDone", "Progress reset.", {}),
  ("setMoreLanguages", "More languages are coming", {}),
+ # account (optional sign-in and cloud backup)
+ ("setAccount", "Backup and sync", {}),
+ ("accSignInTitle", "Back up and sync your progress", {}),
+ ("accSignInBody", "Sign in with Google to keep your progress safe and continue on another device. It is optional.", {}),
+ ("accSignInButton", "Sign in with Google", {}),
+ ("accPrivacyNote", "Only your progress is stored, linked to your Google account. Tap to read the privacy policy.", {}),
+ ("accSignedInAs", "Signed in as {who}", {"who": "String"}),
+ ("accSyncNow", "Sync now", {}),
+ ("accSyncing", "Syncing…", {}),
+ ("accLastSynced", "Last synced {when}", {"when": "String"}),
+ ("accNeverSynced", "Not synced yet", {}),
+ ("accSignOut", "Sign out", {}),
+ ("accSignedOut", "Signed out. Your progress stays on this device.", {}),
+ ("accDelete", "Delete account and cloud data", {}),
+ ("accDeleteConfirmTitle", "Delete your account?", {}),
+ ("accDeleteConfirmBody", "This permanently deletes your cloud backup and your sign-in account. Progress on this device stays. It cannot be undone.", {}),
+ ("accDeleteConfirm", "Delete", {}),
+ ("accDeleted", "Your account and cloud data were deleted.", {}),
+ ("accErrSignIn", "Sign-in did not work. Please try again.", {}),
+ ("accErrOffline", "You seem to be offline. Please check your connection.", {}),
+ ("accErrSync", "Could not sync. Your progress is safe on this device and we will try again later.", {}),
+ ("accErrDelete", "Could not delete the account. Please try again.", {}),
  # about
  ("aboutTitle", "About", {}),
  ("aboutVersion", "Version {v}", {"v": "String"}),
@@ -190,6 +212,8 @@ S = [
  ("aboutLicenceText", "View licence text", {}),
  ("aboutOpenLicences", "Open-source licences", {}),
  ("aboutLink", "Open link", {}),
+ ("aboutPrivacy", "Privacy policy", {}),
+ ("aboutDeleteData", "Delete your data", {}),
 ]
 
 def main():

@@ -6,12 +6,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../core/links.dart';
 import '../../core/providers.dart';
 import '../../core/theme/app_theme.dart';
 import '../../l10n/l10n.dart';
 
 class AboutScreen extends ConsumerWidget {
   const AboutScreen({super.key});
+
+  void _open(String url) => unawaited(
+    launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication),
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,6 +48,20 @@ class AboutScreen extends ConsumerWidget {
           Text(l.aboutBody, style: context.text.bodyLarge),
           const SizedBox(height: 12),
           Text(l.aboutAds, style: context.text.bodyMedium),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            children: [
+              OutlinedButton(
+                onPressed: () => _open(AppLinks.privacy),
+                child: Text(l.aboutPrivacy),
+              ),
+              OutlinedButton(
+                onPressed: () => _open(AppLinks.deleteData),
+                child: Text(l.aboutDeleteData),
+              ),
+            ],
+          ),
           const SizedBox(height: 24),
           Text(l.aboutCredits, style: context.text.titleMedium),
           const SizedBox(height: 8),

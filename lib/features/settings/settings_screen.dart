@@ -11,6 +11,7 @@ import '../../core/widgets/misc_widgets.dart';
 import '../../data/settings.dart';
 import '../../l10n/l10n.dart';
 import '../../languages/models.dart';
+import '../account/account_section.dart';
 import '../home/home_shell.dart';
 import '../progress/progress_state.dart';
 
@@ -82,6 +83,7 @@ class SettingsScreen extends ConsumerWidget {
             value: s.unlockAll,
             onChanged: (v) => notifier.update((x) => x.copyWith(unlockAll: v)),
           ),
+          const AccountSection(),
           _Section(l.setVoice),
           SwitchListTile(
             secondary: const Icon(Icons.slow_motion_video_rounded),

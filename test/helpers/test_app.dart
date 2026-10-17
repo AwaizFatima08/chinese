@@ -1,5 +1,6 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:lingodaily/core/providers.dart';
 import 'package:lingodaily/core/services/listener.dart';
 import 'package:lingodaily/core/services/speaker.dart';
@@ -31,6 +32,7 @@ makeContainer({
   bool onboardingDone = true,
   DateTime? start,
   String language = 'zh',
+  List<Override> extraOverrides = const [],
 }) async {
   SharedPreferences.setMockInitialValues({
     'onboardingDone': onboardingDone,
@@ -54,6 +56,7 @@ makeContainer({
       voiceListenerProvider.overrideWithValue(
         ScriptedListener(isAvailable: false),
       ),
+      ...extraOverrides,
     ],
   );
   return (container: container, time: time, repo: repo);

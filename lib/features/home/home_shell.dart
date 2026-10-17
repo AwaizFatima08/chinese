@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/providers.dart';
 import '../../l10n/l10n.dart';
+import '../account/account_controller.dart';
 import '../progress/progress_state.dart';
 
 /// True once the teacher voice engine has been prepared for the current language.
@@ -50,6 +53,7 @@ class _HomeShellState extends ConsumerState<HomeShell>
       ref
         ..invalidate(progressProvider)
         ..invalidate(speakerReadyProvider);
+      unawaited(ref.read(accountProvider.notifier).sync());
     }
   }
 
@@ -60,7 +64,8 @@ class _HomeShellState extends ConsumerState<HomeShell>
     // Warm up the voice and ads once the main screens appear.
     ref
       ..watch(speakerReadyProvider)
-      ..watch(adsReadyProvider);
+      ..watch(adsReadyProvider)
+      ..watch(accountProvider);
     final ads = ref.watch(adServiceProvider);
 
     return Scaffold(
