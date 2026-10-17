@@ -119,8 +119,8 @@ class _TalkTurnViewState extends ConsumerState<TalkTurnView> {
                           ? null
                           : (_) => setState(() => _picked = i),
                       label: Text(turn.replies[i]),
-                      labelStyle: context.text.bodyLarge,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      labelStyle: context.text.bodyMedium,
+                      padding: const EdgeInsets.symmetric(vertical: 4),
                     ),
                   ),
               ],
@@ -179,9 +179,9 @@ class _Bubble extends StatelessWidget {
               const SizedBox(height: 2),
               Text(
                 text,
-                style: context.text.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  height: 1.3,
+                style: context.text.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  height: 1.25,
                 ),
               ),
             ],
