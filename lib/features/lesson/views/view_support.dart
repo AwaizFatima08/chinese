@@ -39,6 +39,7 @@ class OptionButton extends StatelessWidget {
     required this.onTap,
     this.script = false,
     this.sublabel,
+    this.fontSize,
   });
 
   final String label;
@@ -48,6 +49,9 @@ class OptionButton extends StatelessWidget {
 
   /// Render in large script type (for hanzi options).
   final bool script;
+
+  /// Overrides the automatic type size.
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -119,9 +123,11 @@ class OptionButton extends StatelessWidget {
                               ? TextAlign.center
                               : TextAlign.start,
                           style: TextStyle(
-                            fontSize: script
-                                ? 34
-                                : (_han.hasMatch(label) ? 22 : 17),
+                            fontSize:
+                                fontSize ??
+                                (script
+                                    ? 34
+                                    : (_han.hasMatch(label) ? 22 : 17)),
                             fontWeight: script
                                 ? FontWeight.w500
                                 : FontWeight.w600,

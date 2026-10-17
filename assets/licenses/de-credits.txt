@@ -1,0 +1,7 @@
+LingoDaily — data credits (German pack)
+
+Vocabulary, CEFR tags, English meanings and example sentences: "Anki-Flash-Cards-Deutsch-ZhongWen" by Abdul Mohiz (AMevans12), MIT licence (see de-mit-vocabulary.txt). The data was produced with AI assistance and then filtered, ordered by word frequency and checked by LingoDaily's build scripts. Errors are possible; please report them.
+Noun genders and plural forms: german-nouns by Mark Kopecki (gambolputty), compiled from German Wiktionary, CC BY-SA 4.0 (see de-nouns-cc-by-sa-4.txt).
+Example sentences: Tatoeba contributors, Creative Commons Attribution 2.0 France (https://tatoeba.org).
+Word frequency used to order the lists: wordfreq by Robyn Speer (Apache 2.0 code, CC BY-SA 4.0 data).
+Core words, grammar explanations and exercises: written for LingoDaily by HomiLabs.

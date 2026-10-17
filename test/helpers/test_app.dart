@@ -27,8 +27,15 @@ Future<
     InMemoryProgressRepository repo,
   })
 >
-makeContainer({bool onboardingDone = true, DateTime? start}) async {
-  SharedPreferences.setMockInitialValues({'onboardingDone': onboardingDone});
+makeContainer({
+  bool onboardingDone = true,
+  DateTime? start,
+  String language = 'zh',
+}) async {
+  SharedPreferences.setMockInitialValues({
+    'onboardingDone': onboardingDone,
+    'language': language,
+  });
   final prefs = await SharedPreferences.getInstance();
   final time = TestClock(start ?? DateTime(2026, 10, 17, 9));
   final repo = InMemoryProgressRepository();
@@ -37,7 +44,10 @@ makeContainer({bool onboardingDone = true, DateTime? start}) async {
       sharedPreferencesProvider.overrideWithValue(prefs),
       progressRepositoryProvider.overrideWithValue(repo),
       contentProvider.overrideWith(
-        (ref) => LanguageContent.load('zh', bundle: FileAssetBundle()),
+        (ref) => LanguageContent.load(
+          ref.watch(settingsProvider.select((s) => s.languageId)),
+          bundle: FileAssetBundle(),
+        ),
       ),
       clockProvider.overrideWith((ref) => time.clock),
       speakerProvider.overrideWithValue(SilentSpeaker()),

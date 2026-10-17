@@ -22,11 +22,91 @@ int seconds(Exercise e) => switch (e) {
 };
 
 void main() {
+  for (final lang in ['zh', 'de']) {
+    group('pack $lang', () => packTests(lang));
+  }
+  germanTests();
+}
+
+void germanTests() {
+  group('German specifics', () {
+    late LanguageContent content;
+    late ExerciseBuilder builder;
+
+    setUpAll(() async {
+      content = await LanguageContent.load('de', bundle: FileAssetBundle());
+      builder = ExerciseBuilder(
+        content,
+        LanguageTools.forPack(content.pack, content.words.values),
+      );
+    });
+
+    test('nouns carry article, lemma and plural note', () {
+      final nouns = content.allWords.where((w) => w.article != null);
+      expect(nouns.length, greaterThan(2500));
+      for (final w in nouns.take(300)) {
+        expect(w.text, '${w.article} ${w.lemma}');
+        expect(const {'der', 'die', 'das'}, contains(w.article));
+      }
+      final withPlural = nouns.where((w) => w.note.startsWith('Plural: die '));
+      expect(withPlural.length, greaterThan(nouns.length * 0.8));
+    });
+
+    test('every word has a meaning; no German pack word has romanization', () {
+      for (final w in content.allWords) {
+        expect(w.meanings, isNotEmpty, reason: w.text);
+        expect(w.romanization, isEmpty);
+      }
+    });
+
+    test('vocabulary lessons practise articles and spelling, not strokes', () {
+      var articles = 0;
+      var typed = 0;
+      var strokes = 0;
+      for (final lesson in content.levelByNumber(1)!.lessons) {
+        if (lesson.type != LessonType.vocab) continue;
+        final ex = builder.forLesson(lesson, seed: 7);
+        articles += ex
+            .whereType<ChoiceExercise>()
+            .where((e) => e.kind == ChoiceKind.article)
+            .length;
+        typed += ex.whereType<TypeExercise>().length;
+        strokes += ex.whereType<WriteExercise>().length;
+        expect(
+          ex.whereType<ChoiceExercise>().where(
+            (e) => e.kind == ChoiceKind.listenRomanization,
+          ),
+          isEmpty,
+        );
+      }
+      expect(articles, greaterThan(40));
+      expect(typed, greaterThan(100));
+      expect(strokes, 0);
+    });
+
+    test('article questions have der, die, das and one right answer', () {
+      final lesson = content
+          .levelByNumber(2)!
+          .lessons
+          .firstWhere((l) => l.type == LessonType.vocab);
+      final ex = builder
+          .forLesson(lesson, seed: 3)
+          .whereType<ChoiceExercise>()
+          .where((e) => e.kind == ChoiceKind.article);
+      for (final e in ex) {
+        expect(e.options, ['der', 'die', 'das']);
+        expect(e.options[e.answerIndex], e.word.article);
+      }
+    });
+  });
+}
+
+void packTests(String lang) {
   late LanguageContent content;
   late ExerciseBuilder builder;
 
   setUpAll(() async {
-    content = await LanguageContent.load('zh', bundle: FileAssetBundle());
+    content = await LanguageContent.load(lang, bundle: FileAssetBundle());
     builder = ExerciseBuilder(
       content,
       LanguageTools.forPack(content.pack, content.words.values),
@@ -35,9 +115,15 @@ void main() {
 
   test('content loads with the expected shape', () {
     expect(content.pack.levels.length, 6);
-    expect(content.words.length, greaterThan(4900));
-    expect(content.grammar.length, 62);
-    expect(content.levels['hsk1']!.lessons.length, 34);
+    if (lang == 'zh') {
+      expect(content.words.length, greaterThan(4900));
+      expect(content.grammar.length, 62);
+      expect(content.levels['hsk1']!.lessons.length, 34);
+    } else {
+      expect(content.words.length, greaterThan(5500));
+      expect(content.grammar.length, 60);
+      expect(content.levelByNumber(1)!.info.id, 'a1');
+    }
   });
 
   test(
@@ -96,7 +182,7 @@ void main() {
   );
 
   test('same seed gives the same lesson', () {
-    final lesson = content.levels['hsk1']!.lessons.first;
+    final lesson = content.levelByNumber(1)!.lessons.first;
     String sig(List<Exercise> l) => l.map((e) => e.runtimeType).join(',');
     expect(
       sig(builder.forLesson(lesson, seed: 5)),

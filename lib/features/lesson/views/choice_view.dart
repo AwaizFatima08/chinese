@@ -175,11 +175,18 @@ class _ChoiceViewState extends ConsumerState<ChoiceView> with _PicksOne {
       );
     }
 
+    // Short script options (one or two hanzi, der/die/das) sit in a grid or a
+    // row; longer words (German) get full-width buttons so they never wrap
+    // inside a fixed-height cell at large text sizes.
+    final shortOptions = ex.options.every((o) => o.runes.length <= 4);
+    final asList =
+        ex.optionsAreScript && ex.kind != ChoiceKind.article && !shortOptions;
     final options = <Widget>[
       for (var i = 0; i < ex.options.length; i++)
         OptionButton(
           label: ex.options[i],
-          script: ex.optionsAreScript,
+          script: ex.optionsAreScript && !asList,
+          fontSize: asList ? 24 : null,
           state: stateOf(i, ex.answerIndex),
           onTap: answered ? null : () => _onTap(i),
         ),
@@ -207,7 +214,7 @@ class _ChoiceViewState extends ConsumerState<ChoiceView> with _PicksOne {
               ],
             ],
           )
-        else if (ex.optionsAreScript)
+        else if (ex.optionsAreScript && !asList)
           GridView.count(
             crossAxisCount: 2,
             mainAxisSpacing: 12,

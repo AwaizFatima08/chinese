@@ -45,4 +45,9 @@ flutter:
     - assets/content/zh/grammar.json
     - assets/content/zh/levels/
     - assets/content/zh/strokes/
+    - assets/content/de/pack.json
+    - assets/content/de/vocab.json
+    - assets/content/de/sentences.json
+    - assets/content/de/grammar.json
+    - assets/content/de/levels/
     - assets/licenses/

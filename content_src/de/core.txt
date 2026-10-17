@@ -1,0 +1,236 @@
+# Core words the open vocabulary lists leave out: pronouns, prepositions, conjunctions,
+# greetings, question words, numbers, frequent adverbs. Written for LingoDaily.
+# Format: level|pos|word|meaning|German example|English example|note
+# pos: noun/verb/adjective/adverb/pronoun/preposition/conjunction/phrase/number/determiner
+A1|pronoun|ich|I|Ich komme aus Pakistan.|I come from Pakistan.|
+A1|pronoun|du|you (informal, singular)|Woher kommst du?|Where do you come from?|
+A1|pronoun|er|he; it|Er wohnt in Berlin.|He lives in Berlin.|
+A1|pronoun|sie|she; they|Sie ist meine Schwester.|She is my sister.|
+A1|pronoun|es|it|Es ist kalt heute.|It is cold today.|
+A1|pronoun|wir|we|Wir lernen Deutsch.|We are learning German.|
+A1|pronoun|ihr|you (informal, plural)|Wo wohnt ihr?|Where do you all live?|
+A1|pronoun|Sie|you (formal)|Wie heißen Sie?|What is your name?|Always capitalised: formal you.
+A1|determiner|ein|a; an; one|Ich habe einen Bruder.|I have a brother.|
+A1|determiner|kein|no; not any|Ich habe keine Zeit.|I have no time.|
+A1|determiner|mein|my|Das ist mein Auto.|That is my car.|
+A1|determiner|dein|your (informal)|Ist das dein Buch?|Is that your book?|
+A1|determiner|unser|our|Unser Haus ist klein.|Our house is small.|
+A1|conjunction|und|and|Ich trinke Tee und Kaffee.|I drink tea and coffee.|
+A1|conjunction|oder|or|Möchtest du Tee oder Kaffee?|Would you like tea or coffee?|
+A1|conjunction|aber|but|Ich bin müde, aber glücklich.|I am tired but happy.|
+A1|conjunction|denn|because; for|Ich bleibe zu Hause, denn ich bin krank.|I am staying at home because I am ill.|Word order stays normal after denn.
+A1|conjunction|weil|because|Ich lerne Deutsch, weil ich in Berlin arbeite.|I am learning German because I work in Berlin.|The verb goes to the end.
+A1|adverb|ja|yes|Ja, das stimmt.|Yes, that is right.|
+A1|adverb|nein|no|Nein, danke.|No, thank you.|
+A1|adverb|nicht|not|Ich verstehe das nicht.|I do not understand that.|
+A1|adverb|auch|also; too|Ich komme auch.|I am coming too.|
+A1|adverb|noch|still; yet|Hast du noch Hunger?|Are you still hungry?|
+A1|adverb|schon|already|Bist du schon fertig?|Are you finished already?|
+A1|adverb|nur|only; just|Ich habe nur zehn Euro.|I only have ten euros.|
+A1|adverb|sehr|very|Das Essen ist sehr gut.|The food is very good.|
+A1|adverb|hier|here|Ich wohne hier.|I live here.|
+A1|adverb|da|there; here|Da ist der Bahnhof.|There is the station.|
+A1|adverb|dort|there|Dort steht mein Auto.|My car is over there.|
+A1|adverb|jetzt|now|Ich muss jetzt gehen.|I have to go now.|
+A1|adverb|heute|today|Heute ist Montag.|Today is Monday.|
+A1|adverb|morgen|tomorrow|Morgen habe ich frei.|Tomorrow I am off.|
+A1|adverb|gestern|yesterday|Gestern war ich im Kino.|Yesterday I was at the cinema.|
+A1|adverb|immer|always|Er ist immer pünktlich.|He is always on time.|
+A1|adverb|nie|never|Ich esse nie Fleisch.|I never eat meat.|
+A1|adverb|oft|often|Wir gehen oft spazieren.|We often go for a walk.|
+A1|adverb|manchmal|sometimes|Manchmal fahre ich mit dem Bus.|Sometimes I take the bus.|
+A1|adverb|gern|gladly; with pleasure|Ich trinke gern Tee.|I like drinking tea.|Use gern with a verb to say you like doing it.
+A1|adverb|vielleicht|maybe; perhaps|Vielleicht kommt er später.|Maybe he will come later.|
+A1|adverb|zusammen|together|Wir essen zusammen.|We eat together.|
+A1|adverb|mehr|more|Ich möchte mehr Wasser.|I would like more water.|
+A1|adverb|etwas|something; a little|Möchtest du etwas trinken?|Would you like something to drink?|
+A1|adverb|nichts|nothing|Ich habe nichts gesehen.|I saw nothing.|
+A1|pronoun|alle|all; everyone|Alle sind da.|Everyone is here.|
+A1|pronoun|viele|many; many people|Viele Leute lernen Deutsch.|Many people learn German.|
+A1|pronoun|wer|who|Wer ist das?|Who is that?|
+A1|pronoun|was|what|Was machst du?|What are you doing?|
+A1|adverb|wo|where|Wo wohnst du?|Where do you live?|
+A1|adverb|woher|where from|Woher kommst du?|Where do you come from?|
+A1|adverb|wohin|where to|Wohin gehst du?|Where are you going?|
+A1|adverb|wann|when|Wann kommst du?|When are you coming?|
+A1|adverb|wie|how; like|Wie geht es dir?|How are you?|
+A1|adverb|warum|why|Warum lernst du Deutsch?|Why are you learning German?|
+A1|determiner|welcher|which|Welches Buch möchtest du?|Which book would you like?|
+A1|preposition|in|in; into|Ich wohne in Hamburg.|I live in Hamburg.|
+A1|preposition|auf|on; onto|Das Buch liegt auf dem Tisch.|The book is on the table.|
+A1|preposition|mit|with|Ich fahre mit dem Bus.|I travel by bus.|
+A1|preposition|von|from; of|Das ist ein Geschenk von meiner Mutter.|That is a present from my mother.|
+A1|preposition|zu|to; at|Ich gehe zu meinem Freund.|I am going to my friend's.|
+A1|preposition|bei|at; near; with|Ich wohne bei meinen Eltern.|I live with my parents.|
+A1|preposition|nach|after; to (a place)|Nach dem Essen trinken wir Kaffee.|After the meal we drink coffee.|
+A1|preposition|für|for|Das Geschenk ist für dich.|The present is for you.|
+A1|preposition|aus|from; out of|Ich komme aus Indien.|I come from India.|
+A1|preposition|an|at; on|Das Bild hängt an der Wand.|The picture hangs on the wall.|
+A1|preposition|um|around; at (time)|Der Zug fährt um acht Uhr.|The train leaves at eight o'clock.|
+A1|verb|müssen|must; have to|Ich muss arbeiten.|I have to work.|
+A1|verb|wollen|to want|Wir wollen ins Kino gehen.|We want to go to the cinema.|
+A1|verb|sollen|should; ought to|Du sollst mehr schlafen.|You should sleep more.|
+A1|verb|dürfen|to be allowed to; may|Hier darf man nicht rauchen.|You may not smoke here.|
+A1|verb|mögen|to like|Ich mag Schokolade.|I like chocolate.|
+A1|verb|möchten|would like to|Ich möchte einen Kaffee, bitte.|I would like a coffee, please.|
+A1|phrase|Hallo|hello|Hallo, wie geht's?|Hello, how are you?|
+A1|phrase|Guten Morgen|good morning|Guten Morgen, Frau Schmidt!|Good morning, Mrs Schmidt!|
+A1|phrase|Guten Tag|good day; hello|Guten Tag, ich heiße Anna.|Hello, my name is Anna.|
+A1|phrase|Guten Abend|good evening|Guten Abend, meine Damen und Herren!|Good evening, ladies and gentlemen!|
+A1|phrase|Gute Nacht|good night|Gute Nacht und schlaf gut!|Good night and sleep well!|
+A1|phrase|Tschüss|bye|Tschüss, bis morgen!|Bye, see you tomorrow!|
+A1|phrase|Auf Wiedersehen|goodbye|Auf Wiedersehen, Herr Müller!|Goodbye, Mr Müller!|
+A1|phrase|Danke|thank you|Danke für deine Hilfe.|Thank you for your help.|
+A1|phrase|Bitte|please; you are welcome|Einen Kaffee, bitte.|A coffee, please.|
+A1|phrase|Entschuldigung|excuse me; sorry|Entschuldigung, wo ist der Bahnhof?|Excuse me, where is the station?|
+A1|phrase|Es tut mir leid|I am sorry|Es tut mir leid, ich bin zu spät.|I am sorry, I am late.|
+A1|phrase|Wie geht's?|how are you?|Hallo Tom, wie geht's?|Hello Tom, how are you?|
+A1|phrase|Gut|good; fine|Mir geht es gut.|I am fine.|
+A1|phrase|Prost|cheers|Prost, auf dein Wohl!|Cheers, to your health!|
+A1|number|null|zero|Die Temperatur ist null Grad.|The temperature is zero degrees.|
+A1|number|eins|one|Eins, zwei, drei!|One, two, three!|
+A1|number|zwei|two|Ich habe zwei Kinder.|I have two children.|
+A1|number|drei|three|Wir sind drei Personen.|There are three of us.|
+A1|number|vier|four|Es ist vier Uhr.|It is four o'clock.|
+A1|number|fünf|five|Fünf Minuten noch.|Five more minutes.|
+A1|number|sechs|six|Ich stehe um sechs auf.|I get up at six.|
+A1|number|sieben|seven|Eine Woche hat sieben Tage.|A week has seven days.|
+A1|number|acht|eight|Der Film beginnt um acht.|The film starts at eight.|
+A1|number|neun|nine|Neun Euro, bitte.|Nine euros, please.|
+A1|number|zehn|ten|Ich warte zehn Minuten.|I wait ten minutes.|
+A1|number|elf|eleven|Elf Spieler stehen auf dem Platz.|Eleven players are on the pitch.|
+A1|number|zwölf|twelve|Es ist zwölf Uhr.|It is twelve o'clock.|
+A1|number|zwanzig|twenty|Er ist zwanzig Jahre alt.|He is twenty years old.|
+A1|number|dreißig|thirty|Das kostet dreißig Euro.|That costs thirty euros.|
+A1|number|hundert|one hundred|Hundert Gramm, bitte.|One hundred grams, please.|
+A1|number|tausend|one thousand|Das Auto kostet tausend Euro.|The car costs a thousand euros.|
+A1|noun|Mai|May|Im Mai blühen die Blumen.|The flowers bloom in May.|
+A1|noun|August|August|Im August ist es heiß.|It is hot in August.|
+A1|noun|September|September|Im September beginnt die Schule.|School starts in September.|
+A1|noun|November|November|Im November ist es oft neblig.|It is often foggy in November.|
+A2|determiner|euer|your (informal, plural)|Ist das euer Hund?|Is that your dog?|
+A2|determiner|jeder|every; each|Jeder Mensch ist anders.|Every person is different.|
+A2|conjunction|dass|that|Ich weiß, dass du müde bist.|I know that you are tired.|The verb goes to the end.
+A2|conjunction|wenn|if; when|Wenn es regnet, bleibe ich zu Hause.|If it rains, I stay at home.|
+A2|conjunction|ob|whether; if|Ich weiß nicht, ob er kommt.|I do not know whether he is coming.|
+A2|conjunction|damit|so that|Ich spreche langsam, damit du mich verstehst.|I speak slowly so that you understand me.|
+A2|conjunction|sondern|but rather|Ich trinke keinen Kaffee, sondern Tee.|I do not drink coffee but tea.|Use sondern after a negative.
+A2|conjunction|bevor|before|Bevor ich gehe, rufe ich dich an.|Before I go, I will call you.|
+A2|conjunction|nachdem|after|Nachdem wir gegessen hatten, gingen wir spazieren.|After we had eaten, we went for a walk.|
+A2|conjunction|als|when; than|Als ich klein war, wohnte ich in Köln.|When I was small, I lived in Cologne.|
+A2|adverb|deshalb|therefore; that is why|Ich bin krank, deshalb bleibe ich im Bett.|I am ill, that is why I am staying in bed.|
+A2|adverb|trotzdem|nevertheless|Es regnet, trotzdem gehen wir spazieren.|It is raining, but we are going for a walk anyway.|
+A2|adverb|dann|then|Zuerst essen wir, dann gehen wir.|First we eat, then we go.|
+A2|adverb|danach|afterwards|Danach ging ich nach Hause.|Afterwards I went home.|
+A2|adverb|zuerst|first|Zuerst muss ich duschen.|First I have to take a shower.|
+A2|adverb|bald|soon|Bis bald!|See you soon!|
+A2|adverb|leider|unfortunately|Leider habe ich keine Zeit.|Unfortunately I have no time.|
+A2|adverb|wirklich|really|Das ist wirklich schön.|That is really beautiful.|
+A2|adverb|ziemlich|quite; fairly|Es ist ziemlich kalt.|It is quite cold.|
+A2|adverb|fast|almost|Ich bin fast fertig.|I am almost finished.|
+A2|adverb|genau|exactly|Genau, das meine ich.|Exactly, that is what I mean.|
+A2|adverb|zum Beispiel|for example|Ich mag Obst, zum Beispiel Äpfel.|I like fruit, for example apples.|
+A2|pronoun|man|one; you; people|Hier kann man gut essen.|You can eat well here.|
+A2|pronoun|jemand|someone|Ist jemand da?|Is anyone there?|
+A2|pronoun|niemand|nobody|Niemand hat angerufen.|Nobody called.|
+A2|pronoun|einige|some; a few|Einige Gäste sind schon da.|Some guests are already here.|
+A2|pronoun|beide|both|Wir mögen beide Musik.|We both like music.|
+A2|preposition|durch|through; by|Wir fahren durch die Stadt.|We drive through the city.|
+A2|preposition|gegen|against; around|Ich habe nichts gegen deinen Plan.|I have nothing against your plan.|
+A2|preposition|ohne|without|Ich trinke Kaffee ohne Zucker.|I drink coffee without sugar.|
+A2|preposition|über|over; about|Wir sprechen über das Wetter.|We are talking about the weather.|
+A2|preposition|unter|under; among|Die Katze ist unter dem Tisch.|The cat is under the table.|
+A2|preposition|vor|in front of; before|Der Bus hält vor dem Haus.|The bus stops in front of the house.|
+A2|preposition|hinter|behind|Der Garten ist hinter dem Haus.|The garden is behind the house.|
+A2|preposition|neben|next to|Ich sitze neben meinem Freund.|I sit next to my friend.|
+A2|preposition|zwischen|between|Die Bank ist zwischen dem Café und dem Hotel.|The bank is between the café and the hotel.|
+A2|preposition|bis|until; to|Ich arbeite bis fünf Uhr.|I work until five o'clock.|
+A2|preposition|seit|since; for|Ich wohne seit zwei Jahren hier.|I have lived here for two years.|
+A2|preposition|während|during; while|Während der Pause trinke ich Tee.|During the break I drink tea.|
+A2|preposition|wegen|because of|Wegen des Regens bleiben wir zu Hause.|Because of the rain we are staying at home.|
+A2|preposition|außer|except; apart from|Alle sind da außer Peter.|Everyone is here except Peter.|
+A2|preposition|gegenüber|opposite|Die Post ist gegenüber dem Bahnhof.|The post office is opposite the station.|
+B1|conjunction|obwohl|although|Obwohl es regnet, gehen wir spazieren.|Although it is raining, we are going for a walk.|The verb goes to the end.
+B1|conjunction|falls|in case; if|Falls du Zeit hast, ruf mich an.|If you have time, call me.|
+B1|conjunction|sobald|as soon as|Sobald ich fertig bin, rufe ich dich an.|As soon as I am finished, I will call you.|
+B1|conjunction|solange|as long as|Solange es regnet, bleiben wir hier.|As long as it rains, we stay here.|
+B1|conjunction|indem|by (doing something)|Er lernt Deutsch, indem er viel liest.|He learns German by reading a lot.|
+B1|conjunction|sodass|so that; with the result that|Es regnete stark, sodass wir nicht gehen konnten.|It rained heavily, so we could not go.|
+B1|conjunction|entweder|either|Wir fahren entweder heute oder morgen.|We are travelling either today or tomorrow.|
+B1|conjunction|weder|neither|Er hat weder Zeit noch Geld.|He has neither time nor money.|
+B1|conjunction|zwar|admittedly|Er ist zwar jung, aber sehr erfahren.|He is young, it is true, but very experienced.|
+B1|conjunction|je|the (more...)|Je mehr ich lerne, desto besser verstehe ich.|The more I learn, the better I understand.|
+B1|adverb|außerdem|besides; also|Es ist teuer, und außerdem schmeckt es nicht gut.|It is expensive and, besides, it does not taste good.|
+B1|adverb|jedoch|however|Er wollte kommen, jedoch war er krank.|He wanted to come, however he was ill.|
+B1|adverb|allerdings|however; admittedly|Das Hotel ist schön, allerdings sehr teuer.|The hotel is nice, but very expensive.|
+B1|adverb|eigentlich|actually|Eigentlich wollte ich zu Hause bleiben.|Actually I wanted to stay at home.|
+B1|adverb|übrigens|by the way|Übrigens, hast du Peter gesehen?|By the way, have you seen Peter?|
+B1|adverb|jedenfalls|in any case|Ich komme jedenfalls pünktlich.|In any case I will be on time.|
+B1|adverb|ungefähr|approximately|Es dauert ungefähr eine Stunde.|It takes about an hour.|
+B1|adverb|besonders|especially|Ich mag Obst, besonders Mangos.|I like fruit, especially mangoes.|
+B1|adverb|gleich|right away; same|Ich komme gleich.|I am coming right away.|
+B1|adverb|nämlich|namely; you see|Ich kann nicht kommen, ich bin nämlich krank.|I cannot come, you see, I am ill.|
+B1|adverb|dagegen|against it; on the other hand|Ich habe nichts dagegen.|I have nothing against it.|
+B1|adverb|dabei|in doing so; at the same time|Er hört Musik und lernt dabei.|He listens to music and studies at the same time.|
+B1|pronoun|manche|some|Manche Leute trinken keinen Kaffee.|Some people do not drink coffee.|
+B1|pronoun|mehrere|several|Ich habe mehrere Bücher gelesen.|I have read several books.|
+B1|pronoun|andere|other; others|Die anderen kommen später.|The others are coming later.|
+B1|preposition|trotz|despite|Trotz des Regens gingen wir spazieren.|Despite the rain we went for a walk.|
+B1|preposition|innerhalb|within|Innerhalb einer Woche bekommen Sie eine Antwort.|Within a week you will get an answer.|
+B1|preposition|außerhalb|outside of|Er wohnt außerhalb der Stadt.|He lives outside the city.|
+B1|preposition|anstatt|instead of|Anstatt Tee trinke ich Wasser.|Instead of tea I am drinking water.|
+B1|preposition|entlang|along|Wir gehen den Fluss entlang.|We walk along the river.|
+B2|conjunction|dennoch|nevertheless|Es war schwer, dennoch gab er nicht auf.|It was hard, yet he did not give up.|
+B2|conjunction|sowohl|both (… as well as)|Er spricht sowohl Deutsch als auch Englisch.|He speaks both German and English.|
+B2|conjunction|ehe|before|Ehe du gehst, trink noch etwas.|Before you go, have another drink.|
+B2|conjunction|sofern|provided that|Sofern das Wetter gut ist, fahren wir.|Provided the weather is good, we will go.|
+B2|conjunction|wohingegen|whereas|Er ist ruhig, wohingegen sie sehr lebhaft ist.|He is quiet, whereas she is very lively.|
+B2|conjunction|geschweige denn|let alone|Er kann kaum laufen, geschweige denn rennen.|He can hardly walk, let alone run.|
+B2|adverb|hingegen|on the other hand|Der Norden ist kühl, der Süden hingegen warm.|The north is cool, the south on the other hand warm.|
+B2|adverb|somit|thus; therefore|Das Projekt ist beendet, somit können wir feiern.|The project is finished, so we can celebrate.|
+B2|adverb|folglich|consequently|Er hat nicht gelernt, folglich fiel er durch.|He did not study, consequently he failed.|
+B2|adverb|demnach|accordingly|Demnach ist die Sache klar.|Accordingly the matter is clear.|
+B2|adverb|beziehungsweise|or rather; respectively|Er wohnt in Berlin beziehungsweise in Potsdam.|He lives in Berlin, or rather in Potsdam.|
+B2|adverb|ohnehin|anyway; in any case|Ich muss ohnehin in die Stadt.|I have to go into town anyway.|
+B2|adverb|keinesfalls|under no circumstances|Das darfst du keinesfalls vergessen.|You must under no circumstances forget that.|
+B2|adverb|mittlerweile|by now; meanwhile|Er spricht mittlerweile sehr gut Deutsch.|By now he speaks German very well.|
+B2|adverb|zumindest|at least|Zumindest hat er es versucht.|At least he tried.|
+B2|adverb|insbesondere|in particular|Ich mag Städte, insbesondere Wien.|I like cities, in particular Vienna.|
+B2|adverb|bereits|already|Das habe ich bereits erledigt.|I have already taken care of that.|
+B2|preposition|aufgrund|because of; due to|Aufgrund des Wetters fällt das Fest aus.|Because of the weather the party is cancelled.|
+B2|preposition|bezüglich|regarding|Bezüglich Ihrer Anfrage rufe ich zurück.|Regarding your enquiry, I will call back.|
+B2|preposition|gemäß|according to|Gemäß dem Vertrag zahlen wir monatlich.|According to the contract we pay monthly.|
+B2|preposition|infolge|as a result of|Infolge des Sturms fielen Züge aus.|As a result of the storm trains were cancelled.|
+B2|preposition|seitens|on the part of|Seitens der Firma gibt es keine Einwände.|On the part of the company there are no objections.|
+C1|conjunction|zumal|especially since|Ich bleibe, zumal es regnet.|I am staying, especially since it is raining.|
+C1|conjunction|insofern|insofar as|Das stimmt insofern, als er recht hatte.|That is true insofar as he was right.|
+C1|conjunction|sooft|whenever|Sooft er kommt, bringt er Blumen mit.|Whenever he comes, he brings flowers.|
+C1|conjunction|ungeachtet|regardless of|Ungeachtet der Kritik machte er weiter.|Regardless of the criticism he carried on.|
+C1|adverb|ebenfalls|likewise|Danke, ebenfalls!|Thanks, likewise!|
+C1|adverb|ausschließlich|exclusively|Das Büro ist ausschließlich für Mitarbeiter.|The office is exclusively for employees.|
+C1|adverb|nachträglich|afterwards; belatedly|Wir gratulieren nachträglich zum Geburtstag.|We belatedly congratulate you on your birthday.|
+C1|adverb|überdies|moreover|Er ist überdies sehr talentiert.|He is moreover very talented.|
+C1|adverb|ferner|furthermore|Ferner möchte ich Folgendes erwähnen.|Furthermore I would like to mention the following.|
+C1|adverb|keineswegs|by no means|Das ist keineswegs selbstverständlich.|That is by no means a matter of course.|
+C1|adverb|gleichwohl|nevertheless|Er war müde, gleichwohl arbeitete er weiter.|He was tired, nevertheless he kept working.|
+C1|preposition|angesichts|in view of|Angesichts der Lage ist Vorsicht geboten.|In view of the situation caution is advised.|
+C1|preposition|hinsichtlich|with regard to|Hinsichtlich der Kosten gibt es Fragen.|With regard to the costs there are questions.|
+C1|preposition|mittels|by means of|Das Problem wird mittels Software gelöst.|The problem is solved by means of software.|
+C1|preposition|zugunsten|in favour of|Zugunsten der Umwelt fahre ich Rad.|In favour of the environment I cycle.|
+C1|preposition|zuzüglich|plus; in addition to|Der Preis beträgt 50 Euro zuzüglich Versand.|The price is 50 euros plus postage.|
+
+# --- everyday nouns the AI list lacks (gender and plural come from the noun data)
+A1|noun|Eltern|parents|Meine Eltern wohnen in Lahore.|My parents live in Lahore.|Plural only: die Eltern
+A1|noun|Straße|street; road|Die Straße ist sehr lang.|The street is very long.|
+A1|noun|Weg|way; path|Der Weg zum Bahnhof ist kurz.|The way to the station is short.|
+A1|noun|Leben|life|Das Leben ist schön.|Life is beautiful.|
+A1|noun|Orange|orange (fruit)|Ich esse gern eine Orange.|I like eating an orange.|
+A1|noun|Großvater|grandfather|Mein Großvater ist achtzig Jahre alt.|My grandfather is eighty years old.|
+A2|noun|Sorge|worry; concern|Mach dir keine Sorgen!|Do not worry!|
+A2|noun|Zahl|number; figure|Die Zahl sieben bringt Glück.|The number seven brings luck.|
+A2|noun|Weise|way; manner|Auf diese Weise geht es schneller.|This way it is faster.|
+A2|noun|Laden|shop; store|Der Laden schließt um sechs Uhr.|The shop closes at six o'clock.|
+A2|noun|T-Shirt|T-shirt|Ich trage ein blaues T-Shirt.|I am wearing a blue T-shirt.|
+B1|noun|Gedanke|thought|Ich habe einen guten Gedanken.|I have a good thought.|
+B1|noun|Verfahren|procedure; process|Das Verfahren dauert lange.|The procedure takes a long time.|
+B1|noun|Verhalten|behaviour|Sein Verhalten war nicht höflich.|His behaviour was not polite.|

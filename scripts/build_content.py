@@ -24,6 +24,9 @@ import re
 import sys
 from collections import defaultdict
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import packlib  # noqa: E402
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 RAW = os.path.join(ROOT, "data", "raw")
 SRC = os.path.join(ROOT, "content_src", "zh")
@@ -342,80 +345,10 @@ def load_grammar(seg: Segmenter):
 
 # ------------------------------------------------------------- learning path
 def build_levels(words, chosen, grammar):
-    levels = []
-    grammar_by_level = defaultdict(list)
-    for g in grammar:
-        grammar_by_level[g["lvl"]].append(g)
-    for L in range(1, 7):
-        lw = [w for w in words if w["lvl"] == L]
-        per = WORDS_PER_LESSON[L]
-        n_vocab = math.ceil(len(lw) / per)
-        n_units = math.ceil(n_vocab / VOCAB_LESSONS_PER_UNIT)
-        gpts = grammar_by_level.get(L, [])
-        g_per_unit = math.ceil(len(gpts) / n_units) if gpts else 0
-        units = []
-        wi = 0
-        gi = 0
-        lesson_no = 0
-        for u in range(1, n_units + 1):
-            lessons = []
-            unit_words = []
-            for k in range(VOCAB_LESSONS_PER_UNIT):
-                if wi >= len(lw):
-                    break
-                chunk = lw[wi:wi + per]
-                wi += len(chunk)
-                lesson_no += 1
-                unit_words += [w["id"] for w in chunk]
-                sents = []
-                for w in chunk:
-                    sents += chosen[w["id"]][:2]
-                lessons.append({
-                    "id": f"zh-hsk{L}-u{u:02d}-l{len(lessons) + 1:02d}",
-                    "type": "vocab",
-                    "title": f"Lesson {lesson_no}",
-                    "subtitle": " · ".join(w["s"] for w in chunk[:4]) + (" …" if len(chunk) > 4 else ""),
-                    "words": [w["id"] for w in chunk],
-                    "sentences": sents,
-                    "minutes": 10 if L <= 2 else 11,
-                })
-            if g_per_unit and gi < len(gpts):
-                pts = gpts[gi:gi + g_per_unit]
-                gi += len(pts)
-                lessons.append({
-                    "id": f"zh-hsk{L}-u{u:02d}-g",
-                    "type": "grammar",
-                    "title": "Grammar",
-                    "subtitle": " · ".join(p["title"] for p in pts),
-                    "grammar": [p["id"] for p in pts],
-                    "words": [],
-                    "sentences": [],
-                    "minutes": 6,
-                })
-            lessons.append({
-                "id": f"zh-hsk{L}-u{u:02d}-c",
-                "type": "checkpoint",
-                "title": "Checkpoint",
-                "subtitle": f"Unit {u} review",
-                "words": unit_words,
-                "sentences": [],
-                "minutes": 4,
-            })
-            units.append({
-                "id": f"zh-hsk{L}-u{u:02d}",
-                "title": f"Unit {u}",
-                "lessons": lessons,
-            })
-        name, title, desc = LEVEL_META[L]
-        n_lessons = sum(len(u["lessons"]) for u in units)
-        levels.append({
-            "id": f"hsk{L}", "number": L, "name": name, "title": title,
-            "description": desc, "wordCount": len(lw),
-            "unitCount": len(units), "lessonCount": n_lessons,
-            "units": units,
-        })
-        log(f"path: HSK{L} {len(lw)} words → {len(units)} units, {n_lessons} lessons")
-    return levels
+    return packlib.build_levels(
+        "zh", [f"hsk{n}" for n in range(1, 7)], LEVEL_META, words, chosen, grammar,
+        WORDS_PER_LESSON, {1: 10, 2: 10, 3: 11, 4: 11, 5: 11, 6: 11},
+    )
 
 
 # ------------------------------------------------------------------ strokes
