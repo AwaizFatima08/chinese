@@ -21,7 +21,6 @@ class SpeakScreen extends ConsumerWidget {
     final contentAsync = ref.watch(speakContentProvider);
     final progressAsync = ref.watch(speakProgressProvider);
     final settings = ref.watch(settingsProvider);
-    final mic = ref.watch(speakMicProvider).value ?? true;
 
     if (contentAsync.hasError) {
       return MessageView(
@@ -80,7 +79,6 @@ class SpeakScreen extends ConsumerWidget {
               ],
             ),
           ),
-          if (!mic) _Notice(icon: Icons.mic_off_rounded, text: l.speakNoMic),
           if (due > 0)
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),

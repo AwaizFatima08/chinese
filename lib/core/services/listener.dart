@@ -92,11 +92,18 @@ class DeviceVoiceListener implements VoiceListener {
       if (_available) {
         final locales = await _stt.locales();
         final wanted = locale.replaceAll('-', '_').toLowerCase();
-        for (final l in locales) {
-          if (l.localeId.replaceAll('-', '_').toLowerCase() == wanted) {
-            _localeId = l.localeId;
-            break;
-          }
+        String norm(String id) => id.replaceAll('-', '_').toLowerCase();
+        // Exact match first, then the same language (en_US wanted, en_GB
+        // offered), and never keep the previous language by accident.
+        _localeId = locale;
+        final exact = locales.where((l) => norm(l.localeId) == wanted);
+        final sameLanguage = locales.where(
+          (l) => norm(l.localeId).split('_').first == wanted.split('_').first,
+        );
+        if (exact.isNotEmpty) {
+          _localeId = exact.first.localeId;
+        } else if (sameLanguage.isNotEmpty) {
+          _localeId = sameLanguage.first.localeId;
         }
       }
     } on Object catch (e) {

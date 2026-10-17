@@ -37,9 +37,3 @@ final speakProgressProvider = FutureProvider<SpeakProgress>((ref) async {
     words: await repo.wordProgress(speakLanguage),
   );
 });
-
-/// Whether speech recognition works for the chosen English accent.
-final speakMicProvider = FutureProvider.autoDispose<bool>((ref) {
-  final locale = ref.watch(settingsProvider.select((s) => s.englishSttLocale));
-  return ref.read(voiceListenerProvider).init(locale);
-});
