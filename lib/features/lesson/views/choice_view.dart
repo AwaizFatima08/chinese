@@ -186,6 +186,7 @@ class _ChoiceViewState extends ConsumerState<ChoiceView> with _PicksOne {
         OptionButton(
           label: ex.options[i],
           script: ex.optionsAreScript && !asList,
+          compact: ex.kind == ChoiceKind.article,
           fontSize: asList ? 24 : null,
           state: stateOf(i, ex.answerIndex),
           onTap: answered ? null : () => _onTap(i),
@@ -206,13 +207,16 @@ class _ChoiceViewState extends ConsumerState<ChoiceView> with _PicksOne {
         Center(child: prompt),
         const SizedBox(height: 28),
         if (ex.kind == ChoiceKind.article)
-          Row(
-            children: [
-              for (var i = 0; i < options.length; i++) ...[
-                if (i > 0) const SizedBox(width: 10),
-                Expanded(child: options[i]),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (var i = 0; i < options.length; i++) ...[
+                  if (i > 0) const SizedBox(width: 10),
+                  Expanded(child: options[i]),
+                ],
               ],
-            ],
+            ),
           )
         else if (ex.optionsAreScript && !asList)
           GridView.count(

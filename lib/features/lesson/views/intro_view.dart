@@ -76,6 +76,7 @@ class _IntroViewState extends ConsumerState<IntroView> {
                   ScriptText(
                     w.text,
                     romanization: w.romanization,
+                    article: w.article,
                     style: const TextStyle(
                       fontSize: 76,
                       height: 1.15,
@@ -99,6 +100,17 @@ class _IntroViewState extends ConsumerState<IntroView> {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+                  if (w.note.isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      w.note,
+                      textAlign: TextAlign.center,
+                      style: text.titleSmall?.copyWith(
+                        color: context.scheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                   if (w.meanings.length > 1) ...[
                     const SizedBox(height: 6),
                     Text(

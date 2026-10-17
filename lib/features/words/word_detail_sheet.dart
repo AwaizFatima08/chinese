@@ -51,6 +51,7 @@ class WordDetailSheet extends ConsumerWidget {
             child: ScriptText(
               word.text,
               romanization: word.romanization,
+              article: word.article,
               style: const TextStyle(fontSize: 72, height: 1.15),
             ),
           ),

@@ -40,6 +40,7 @@ class OptionButton extends StatelessWidget {
     this.script = false,
     this.sublabel,
     this.fontSize,
+    this.compact = false,
   });
 
   final String label;
@@ -52,6 +53,10 @@ class OptionButton extends StatelessWidget {
 
   /// Overrides the automatic type size.
   final double? fontSize;
+
+  /// A narrow layout for several buttons in one row: centred label with the
+  /// result icon beneath it.
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -107,48 +112,75 @@ class OptionButton extends StatelessWidget {
           child: ConstrainedBox(
             constraints: BoxConstraints(minHeight: script ? 84 : 60),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
+              padding: EdgeInsets.symmetric(
+                horizontal: compact ? 6 : 16,
+                vertical: 12,
+              ),
+              child: compact
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: script
-                          ? CrossAxisAlignment.center
-                          : CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          label,
-                          textAlign: script
-                              ? TextAlign.center
-                              : TextAlign.start,
-                          style: TextStyle(
-                            fontSize:
-                                fontSize ??
-                                (script
-                                    ? 34
-                                    : (_han.hasMatch(label) ? 22 : 17)),
-                            fontWeight: script
-                                ? FontWeight.w500
-                                : FontWeight.w600,
-                            color: fg,
-                            height: 1.25,
-                          ),
-                        ),
-                        if (sublabel != null)
-                          Text(
-                            sublabel!,
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            label,
                             style: TextStyle(
-                              fontSize: 14,
-                              color: fg.withValues(alpha: 0.8),
+                              fontSize: fontSize ?? 30,
+                              fontWeight: FontWeight.w600,
+                              color: fg,
                             ),
                           ),
+                        ),
+                        SizedBox(
+                          height: 24,
+                          child: icon == null
+                              ? null
+                              : Icon(icon, color: iconColor, size: 20),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: script
+                                ? CrossAxisAlignment.center
+                                : CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                label,
+                                textAlign: script
+                                    ? TextAlign.center
+                                    : TextAlign.start,
+                                style: TextStyle(
+                                  fontSize:
+                                      fontSize ??
+                                      (script
+                                          ? 34
+                                          : (_han.hasMatch(label) ? 22 : 17)),
+                                  fontWeight: script
+                                      ? FontWeight.w500
+                                      : FontWeight.w600,
+                                  color: fg,
+                                  height: 1.25,
+                                ),
+                              ),
+                              if (sublabel != null)
+                                Text(
+                                  sublabel!,
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: fg.withValues(alpha: 0.8),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        if (icon != null) Icon(icon, color: iconColor),
                       ],
                     ),
-                  ),
-                  if (icon != null) Icon(icon, color: iconColor),
-                ],
-              ),
             ),
           ),
         ),

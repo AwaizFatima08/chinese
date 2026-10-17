@@ -233,6 +233,7 @@ class _SpeakPracticeState extends ConsumerState<_SpeakPractice> {
                       ScriptText(
                         widget.text,
                         romanization: isSentence ? null : widget.romanization,
+                        article: widget.word?.article,
                         style: TextStyle(
                           fontSize: isSentence ? 28 : 56,
                           height: 1.2,

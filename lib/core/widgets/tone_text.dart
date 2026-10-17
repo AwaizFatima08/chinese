@@ -33,8 +33,18 @@ class ScriptText extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var base = style ?? DefaultTextStyle.of(context).style;
+    // Headline-size alphabetic words (sized for hanzi) are scaled down and
+    // fitted to the line so a long word never wraps letter by letter.
+    final latin = !_han.hasMatch(text);
+    final big = latin && (base.fontSize ?? 0) >= 40;
+    if (big) base = base.copyWith(fontSize: base.fontSize! * 0.62);
+    final child = _content(context, ref, base);
+    return big ? FittedBox(fit: BoxFit.scaleDown, child: child) : child;
+  }
+
+  Widget _content(BuildContext context, WidgetRef ref, TextStyle base) {
     final colorize = ref.watch(settingsProvider.select((s) => s.toneColors));
-    final base = (style ?? DefaultTextStyle.of(context).style);
     final colors = context.appColors;
     final r = romanization;
     final art = article;
