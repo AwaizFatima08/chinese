@@ -18,3 +18,20 @@ curl -sS -L -o cmn_sentences.tsv.bz2 https://downloads.tatoeba.org/exports/per_l
 curl -sS -L -o cmn-eng_links.tsv.bz2 https://downloads.tatoeba.org/exports/per_language/cmn/cmn-eng_links.tsv.bz2
 curl -sS -L -o eng_sentences.tsv.bz2 https://downloads.tatoeba.org/exports/per_language/eng/eng_sentences.tsv.bz2
 ls -la "$RAW"
+
+# ---- German pack (data/raw/de) ----------------------------------------------
+#   AI-assisted CEFR vocabulary (MIT), noun genders from WiktionaryDE (CC BY-SA 4.0),
+#   Tatoeba German sentences and German-English links (CC BY 2.0 FR).
+#   Build with: python3 -m venv .venv && .venv/bin/pip install wordfreq &&
+#               .venv/bin/python scripts/build_content_de.py
+mkdir -p "$RAW/de"
+cd "$RAW/de"
+for L in A1 A2 B1 B2 C1 C2; do
+  curl -sSL -o "German_$L.csv" "https://raw.githubusercontent.com/AMevans12/Anki-Flash-Cards-Deutsch-ZhongWen/main/german/csv/German_$L.csv"
+done
+curl -sSL -o amevans_LICENSE.txt https://raw.githubusercontent.com/AMevans12/Anki-Flash-Cards-Deutsch-ZhongWen/main/LICENSE
+curl -sSL -o german_nouns.csv https://raw.githubusercontent.com/gambolputty/german-nouns/main/german_nouns/nouns.csv
+curl -sSL -o german_nouns_LICENSE.txt https://raw.githubusercontent.com/gambolputty/german-nouns/main/LICENSE
+curl -sSL -o deu_sentences.tsv.bz2 https://downloads.tatoeba.org/exports/per_language/deu/deu_sentences.tsv.bz2
+curl -sSL -o deu-eng_links.tsv.bz2 https://downloads.tatoeba.org/exports/per_language/deu/deu-eng_links.tsv.bz2
+ls -la "$RAW/de"

@@ -104,16 +104,16 @@ class _TypeViewState extends ConsumerState<TypeView> {
             color: scheme.onSurfaceVariant,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SpeakButton(text: word.text, size: 72, label: l.exListenNormal),
+            SpeakButton(text: word.text, size: 60, label: l.exListenNormal),
             const SizedBox(width: 24),
             SpeakButton(
               text: word.text,
               slow: true,
-              size: 56,
+              size: 48,
               label: l.exListenSlow,
             ),
           ],
@@ -127,6 +127,24 @@ class _TypeViewState extends ConsumerState<TypeView> {
           ),
         ),
         const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            for (final c in _special)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: OutlinedButton(
+                  onPressed: _checked ? null : () => _insert(c),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: const Size(56, 48),
+                    padding: EdgeInsets.zero,
+                  ),
+                  child: Text(c, style: const TextStyle(fontSize: 22)),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(height: 10),
         TextField(
           controller: _controller,
           focusNode: _focus,
@@ -151,23 +169,6 @@ class _TypeViewState extends ConsumerState<TypeView> {
           ),
         ),
         const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            for (final c in _special)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 4),
-                child: OutlinedButton(
-                  onPressed: _checked ? null : () => _insert(c),
-                  style: OutlinedButton.styleFrom(
-                    minimumSize: const Size(56, 52),
-                    padding: EdgeInsets.zero,
-                  ),
-                  child: Text(c, style: const TextStyle(fontSize: 22)),
-                ),
-              ),
-          ],
-        ),
         const SizedBox(height: 20),
         if (_checked) ...[
           Center(

@@ -273,9 +273,9 @@ class _LessonScreenState extends ConsumerState<LessonScreen> {
                       child: AnimatedSwitcher(
                         duration: const Duration(milliseconds: 220),
                         child: KeyedSubtree(
-                          key: ValueKey(
-                            '${session.index}-${session.queue.length}',
-                          ),
+                          // Position only: re-queuing a missed exercise must not
+                          // rebuild the screen under the feedback panel.
+                          key: ValueKey(session.index),
                           child: _body(session.current!),
                         ),
                       ),

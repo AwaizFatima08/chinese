@@ -96,6 +96,16 @@ class LingoDailyApp extends ConsumerWidget {
       darkTheme: AppTheme.dark(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
+      builder: (context, child) => ColoredBox(
+        color: Theme.of(context).colorScheme.surface,
+        child: Center(
+          // On tablets keep lessons at a comfortable phone-like width.
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 640),
+            child: child,
+          ),
+        ),
+      ),
       routerConfig: ref.watch(routerProvider),
     );
   }
