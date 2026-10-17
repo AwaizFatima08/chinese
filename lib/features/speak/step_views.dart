@@ -149,6 +149,20 @@ class TipView extends ConsumerWidget {
             ],
           ),
         ),
+        if (step.phrases.isNotEmpty) ...[
+          const SizedBox(height: 16),
+          Text(
+            context.l10n.speakTalkPhrases,
+            style: context.text.titleSmall?.copyWith(color: scheme.primary),
+          ),
+          for (final p in step.phrases)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              dense: true,
+              leading: PlayButton(text: p, size: 40),
+              title: Text(p, style: context.text.titleMedium),
+            ),
+        ],
         if (step.examples.isNotEmpty) ...[
           const SizedBox(height: 16),
           for (final e in step.examples)

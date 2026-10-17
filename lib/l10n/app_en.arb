@@ -495,6 +495,42 @@
     }
   },
   "speakBack": "Back to Speak",
+  "speakSecTalk": "Conversations",
+  "speakSecTalkBody": "Role-play everyday situations: the partner speaks, you answer.",
+  "speakPhaseTalk": "CONVERSATION",
+  "speakTalkTurn": "{n} of {m}",
+  "@speakTalkTurn": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "m": {
+        "type": "int"
+      }
+    }
+  },
+  "speakTalkPhrases": "Useful phrases",
+  "speakTalkChoose": "Choose a reply and say it",
+  "speakTalkOwn": "Use your own words",
+  "speakTalkModel": "Use a model reply",
+  "speakTalkOwnHint": "Answer in your own words. It helps to use words like: {words}",
+  "@speakTalkOwnHint": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "speakTalkGood": "Good reply!",
+  "speakTalkOffTopic": "That did not seem to answer the question. Try again with words like: {words}",
+  "@speakTalkOffTopic": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "speakTalkNoteOwn": "Free answers are checked for topic only, not pronunciation.",
   "setAccount": "Backup and sync",
   "accSignInTitle": "Back up and sync your progress",
   "accSignInBody": "Sign in with Google to keep your progress safe and continue on another device. It is optional.",

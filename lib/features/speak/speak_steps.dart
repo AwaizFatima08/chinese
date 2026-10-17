@@ -3,7 +3,7 @@ import 'dart:math';
 import 'speak_content.dart';
 
 /// The stage of a practice session; shown as the step label.
-enum SpeakPhase { learn, listen, say, stress, recall, shadow }
+enum SpeakPhase { learn, listen, say, stress, recall, shadow, talk }
 
 /// One short step of a practice set. Plain data; the session screen decides
 /// how to present each kind.
@@ -25,11 +25,15 @@ class TipStep extends SpeakStep {
     required this.body,
     this.symbols = const [],
     this.examples = const [],
+    this.phrases = const [],
   });
 
   final String title;
   final String body;
   final List<String> symbols;
+
+  /// Useful phrases to read out before a role-play.
+  final List<String> phrases;
   final List<IpaWord> examples;
 
   @override
@@ -145,6 +149,26 @@ class VocabRecallStep extends SpeakStep {
   SpeakPhase get phase => SpeakPhase.recall;
 }
 
+/// One turn of a role-play: the partner speaks, the learner answers.
+class TalkTurnStep extends SpeakStep {
+  const TalkTurnStep({
+    required this.partner,
+    required this.turn,
+    required this.number,
+    required this.total,
+  });
+
+  final String partner;
+  final TalkTurn turn;
+
+  /// 1-based position in the conversation.
+  final int number;
+  final int total;
+
+  @override
+  SpeakPhase get phase => SpeakPhase.talk;
+}
+
 /// Turns a practice set into its steps. Deterministic for a given [seed].
 class SpeakStepBuilder {
   SpeakStepBuilder(this.content, {required int seed}) : _random = Random(seed);
@@ -178,6 +202,9 @@ class SpeakStepBuilder {
         return s == null ? const [] : _shadow(s);
       case 'tw':
         return _twisters(int.parse(parts[1]));
+      case 'talk':
+        final t = content.talk(parts[1]);
+        return t == null ? const [] : _talk(t);
     }
     return const [];
   }
@@ -272,6 +299,22 @@ class SpeakStepBuilder {
   List<SpeakStep> _shadow(ShadowSet s) => [
     TipStep(title: s.title, body: s.tip),
     for (final line in s.items) SayTextStep(text: line),
+  ];
+
+  List<SpeakStep> _talk(Talk t) => [
+    TipStep(
+      title: t.title,
+      body: t.setting,
+      examples: const [],
+      phrases: t.phrases,
+    ),
+    for (var i = 0; i < t.turns.length; i++)
+      TalkTurnStep(
+        partner: t.partner,
+        turn: t.turns[i],
+        number: i + 1,
+        total: t.turns.length,
+      ),
   ];
 
   List<SpeakStep> _twisters(int n) {

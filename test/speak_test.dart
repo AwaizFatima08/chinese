@@ -18,6 +18,7 @@ import 'package:lingodaily/features/speak/speak_content.dart';
 import 'package:lingodaily/features/speak/speak_providers.dart';
 import 'package:lingodaily/features/speak/speak_session_screen.dart';
 import 'package:lingodaily/features/speak/speak_steps.dart';
+import 'package:lingodaily/features/speak/talk_view.dart';
 
 import 'helpers/file_bundle.dart';
 import 'helpers/test_app.dart';
@@ -72,6 +73,36 @@ void main() {
       expect(record.length, 2);
       expect(record.first.stress, 1);
       expect(record.last.stress, 2);
+    });
+
+    test('role-plays are complete and their replies fit their topic', () {
+      expect(content.talks.length, 9);
+      for (final t in content.talks) {
+        expect(t.turns.length, 6, reason: t.id);
+        expect(t.phrases, isNotEmpty);
+        for (final turn in t.turns) {
+          expect(turn.replies.length, 3, reason: t.id);
+          for (final r in turn.replies) {
+            expect(
+              isOnTopic(turn, r),
+              isTrue,
+              reason: '${t.id}: "${turn.say}" -> "$r"',
+            );
+          }
+        }
+      }
+    });
+
+    test('free answers must be a few words and on topic', () {
+      const turn = TalkTurn(
+        say: 'What would you like?',
+        replies: ['A coffee, please.'],
+        keywords: ['coffee', 'tea'],
+      );
+      expect(isOnTopic(turn, 'I would like a coffee please'), isTrue);
+      expect(isOnTopic(turn, 'coffee'), isFalse, reason: 'too short');
+      expect(isOnTopic(turn, 'the weather is lovely today'), isFalse);
+      expect(isOnTopic(turn, ''), isFalse);
     });
 
     test('vocabulary ids are unique and groups are complete', () {
@@ -133,6 +164,16 @@ void main() {
       expect(steps.whereType<SayWordStep>().length, 5);
     });
 
+    test('a role-play opens with phrases, then one step per turn', () {
+      final steps = SpeakStepBuilder(content, seed: 1).forSet('talk:hotel');
+      expect(steps.first, isA<TipStep>());
+      expect((steps.first as TipStep).phrases, isNotEmpty);
+      final turns = steps.whereType<TalkTurnStep>().toList();
+      expect(turns.length, 6);
+      expect(turns.last.number, 6);
+      expect(turns.first.partner, contains('Maria'));
+    });
+
     test('noun and verb stress words are not played, others are', () {
       final steps = SpeakStepBuilder(
         content,
@@ -182,6 +223,68 @@ void main() {
       );
       await tester.pump(const Duration(milliseconds: 50));
     }
+
+    Future<List<(bool, double)>> pumpTalk(
+      WidgetTester tester,
+      List<ListenResult> script,
+    ) async {
+      final answers = <(bool, double)>[];
+      final t = await makeContainer(listener: ScriptedListener(script: script));
+      addTearDown(t.container.dispose);
+      final talk = content.talk('coffee')!;
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: t.container,
+          child: MaterialApp(
+            theme: AppTheme.light(),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: TalkTurnView(
+                step: TalkTurnStep(
+                  partner: talk.partner,
+                  turn: talk.turns.first,
+                  number: 1,
+                  total: 6,
+                ),
+                onAnswered: (ok, score, {reveal, vocabId}) =>
+                    answers.add((ok, score)),
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 50));
+      return answers;
+    }
+
+    testWidgets('a role-play reply read out loud is scored', (tester) async {
+      final answers = await pumpTalk(tester, [
+        const ListenResult.heard("I'd like a medium cappuccino, please."),
+      ]);
+      await tester.tap(find.byIcon(Icons.mic_rounded));
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(answers.single.$1, isTrue);
+    });
+
+    testWidgets('an own-words reply passes when on topic only', (tester) async {
+      final answers = await pumpTalk(tester, [
+        const ListenResult.heard('the weather is nice today'),
+        const ListenResult.heard('can I get a tea please'),
+      ]);
+      await tester.tap(find.byKey(const ValueKey('toggle-own')));
+      await tester.pump();
+      await tester.tap(find.byKey(const ValueKey('own-mic')));
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(answers, isEmpty);
+      expect(find.textContaining('did not seem to answer'), findsOneWidget);
+      await tester.tap(find.byKey(const ValueKey('own-mic')));
+      await tester.pump(const Duration(milliseconds: 50));
+      await tester.pump(const Duration(milliseconds: 50));
+      expect(answers.single, (true, talkFreeScore));
+    });
 
     testWidgets('a clear attempt passes', (tester) async {
       bool? passed;
@@ -319,6 +422,7 @@ void main() {
         'voc:behaviour:2',
         'sh:interview',
         'tw:2',
+        'talk:coffee',
       ]) {
         final router = GoRouter.of(tester.element(find.byType(Scaffold).first));
         unawaited(router.push('/speak/${Uri.encodeComponent(id)}'));

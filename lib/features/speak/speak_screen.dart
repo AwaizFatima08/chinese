@@ -176,6 +176,7 @@ class _GroupTile extends StatelessWidget {
         l.speakSecTwistersBody,
         Icons.speed_rounded,
       ),
+      SetKind.talk => (l.speakSecTalk, l.speakSecTalkBody, Icons.forum_rounded),
       SetKind.review => ('', '', Icons.replay_rounded),
     };
     final done = group.sets.where((s) => progress?.starsFor(s.id) != 0).length;

@@ -197,8 +197,65 @@ class Twister {
   final String text;
 }
 
+/// One exchange in a role-play: the partner speaks, the learner replies.
+@immutable
+class TalkTurn {
+  const TalkTurn({
+    required this.say,
+    required this.replies,
+    required this.keywords,
+  });
+
+  factory TalkTurn.fromJson(Map<String, dynamic> j) => TalkTurn(
+    say: j['say'] as String,
+    replies: List<String>.from(j['replies'] as List<dynamic>),
+    keywords: List<String>.from(j['keywords'] as List<dynamic>),
+  );
+
+  /// What the partner says.
+  final String say;
+
+  /// Model answers the learner can read out.
+  final List<String> replies;
+
+  /// Words that show a free answer is on topic.
+  final List<String> keywords;
+}
+
+/// A short scripted role-play (ordering coffee, a job interview, ...).
+@immutable
+class Talk {
+  const Talk({
+    required this.id,
+    required this.title,
+    required this.partner,
+    required this.setting,
+    required this.phrases,
+    required this.turns,
+  });
+
+  factory Talk.fromJson(Map<String, dynamic> j) => Talk(
+    id: j['id'] as String,
+    title: j['title'] as String,
+    partner: j['partner'] as String,
+    setting: j['setting'] as String,
+    phrases: List<String>.from(j['phrases'] as List<dynamic>),
+    turns: [
+      for (final t in j['turns'] as List<dynamic>)
+        TalkTurn.fromJson(t as Map<String, dynamic>),
+    ],
+  );
+
+  final String id;
+  final String title;
+  final String partner;
+  final String setting;
+  final List<String> phrases;
+  final List<TalkTurn> turns;
+}
+
 /// What a practice set trains; also its section on the Speak tab.
-enum SetKind { sounds, stress, vocab, shadow, twister, review }
+enum SetKind { sounds, stress, vocab, shadow, twister, talk, review }
 
 /// One short practice session shown on the Speak tab.
 @immutable
@@ -243,6 +300,7 @@ class SpeakContent {
     required this.vocab,
     required this.shadow,
     required this.twisters,
+    this.talks = const [],
   }) : _wordsById = {
          for (final u in vocab)
            for (final w in u.words) w.id: w,
@@ -253,6 +311,7 @@ class SpeakContent {
   final List<VocabUnit> vocab;
   final List<ShadowSet> shadow;
   final List<Twister> twisters;
+  final List<Talk> talks;
   final Map<int, VocabWord> _wordsById;
 
   /// Words per vocabulary practice set, and twisters per set.
@@ -269,6 +328,7 @@ class SpeakContent {
     final vocab = await read('vocab');
     final shadow = await read('sentences');
     final twisters = await read('twisters');
+    final talks = await read('talks');
     return SpeakContent(
       sounds: [
         for (final j in sounds) SoundSet.fromJson(j as Map<String, dynamic>),
@@ -285,6 +345,7 @@ class SpeakContent {
       twisters: [
         for (final j in twisters) Twister.fromJson(j as Map<String, dynamic>),
       ],
+      talks: [for (final j in talks) Talk.fromJson(j as Map<String, dynamic>)],
     );
   }
 
@@ -296,6 +357,7 @@ class SpeakContent {
   StressSet? stressSet(String id) => _firstWhere(stress, (s) => s.id == id);
   ShadowSet? shadowSet(String id) => _firstWhere(shadow, (s) => s.id == id);
   VocabUnit? vocabUnit(String id) => _firstWhere(vocab, (s) => s.id == id);
+  Talk? talk(String id) => _firstWhere(talks, (s) => s.id == id);
 
   static T? _firstWhere<T>(List<T> list, bool Function(T) test) {
     for (final e in list) {
@@ -387,6 +449,19 @@ class SpeakContent {
         ],
       ),
       PracticeGroup(kind: SetKind.twister, sets: twisterSets),
+      PracticeGroup(
+        kind: SetKind.talk,
+        sets: [
+          for (final t in talks)
+            PracticeSet(
+              id: 'talk:${t.id}',
+              kind: SetKind.talk,
+              title: t.title,
+              subtitle: t.setting,
+              minutes: 6,
+            ),
+        ],
+      ),
     ];
   }
 

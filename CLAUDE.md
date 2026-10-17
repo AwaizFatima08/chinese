@@ -32,6 +32,9 @@ Flutter **Android** app (package `com.homilabs.lingo15`, never change after the 
 ## Account and cloud backup (added 2026-10-17, version 1.1.0)
 Optional Google sign-in with a merge-based backup in Firestore, see `docs/firebase.md` and `docs/revision-2.md`. Code: `lib/data/backup.dart` (pure merge), `lib/core/services/{auth_service,cloud_store,firebase_setup}.dart`, `lib/features/account/`. Needs `android/app/google-services.json` (gitignored); without it Firebase init fails quietly and the account section is hidden. Public pages: tools.homilabs.org/lingo15/.
 
+## Speak English (branch feature/speak-english, revision 3)
+Speak tab (`lib/features/speak/`, `docs/speak.md`): offline pronunciation, stress, vocabulary, sentence, twister and scripted role-play practice. Content authored in `content_src/speak/*.py` -> `python3 scripts/build_speak_content.py` -> `assets/speak/*.json` (IPA from CMUdict, credited in About). Progress is stored as language `en`. No live AI by decision; on-device LLM is a documented later experiment.
+
 ## Content pipeline
 `scripts/fetch_sources.sh` → `data/raw/` (gitignored) → `python3 scripts/build_content.py` → `assets/content/zh/` (committed). Authored files: `content_src/zh/pack.json`, `content_src/zh/grammar.json`. Output is deterministic; lesson ids are stored in users' progress, so never reorder words by hand. Sources and licences: `assets/licenses/`, About screen.
 

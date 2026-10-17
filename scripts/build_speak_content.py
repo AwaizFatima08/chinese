@@ -14,6 +14,7 @@ from stress import STRESS
 from sentences import SENTENCES
 from twisters import TWISTERS
 from vocab import VOCAB
+from talks import TALKS
 
 OUT = os.path.join(ROOT, "assets", "speak")
 
@@ -173,13 +174,14 @@ def main():
     dump("vocab.json", vocab)
     dump("sentences.json", sentences)
     dump("twisters.json", twisters)
+    dump("talks.json", TALKS)
 
     lic = os.path.join(ROOT, "assets", "licenses")
     os.makedirs(lic, exist_ok=True)
     shutil.copyfile(os.path.join(ROOT, "data", "raw", "en", "cmudict-LICENSE"), os.path.join(lic, "speak-cmudict.txt"))
     print(f"sounds {len(sounds)} sets, {sum(len(s['pairs']) for s in sounds)} pairs; stress {len(stress)} sets, "
           f"{sum(len(s['words']) for s in stress)} words; vocab {len(vocab)} units, {wid} words; "
-          f"sentences {sum(len(s['items']) for s in sentences)}; twisters {len(twisters)}")
+          f"sentences {sum(len(s['items']) for s in sentences)}; twisters {len(twisters)}; talks {len(TALKS)}")
 
 if __name__ == "__main__":
     main()
