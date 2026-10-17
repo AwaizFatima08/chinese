@@ -21,6 +21,13 @@ abstract class Speaker {
   /// Speaks [text] in English (for meanings and instructions).
   Future<void> speakEnglish(String text);
 
+  /// Speaks [text] with a voice for [locale] (e.g. `en-GB`), whatever the
+  /// language the lessons use. [slow] uses a slower rate.
+  Future<void> speakIn(String text, String locale, {bool slow = false});
+
+  /// Whether this device has a voice for [locale].
+  Future<bool> hasVoiceFor(String locale);
+
   Future<void> stop();
 }
 
@@ -125,6 +132,20 @@ class DeviceSpeaker implements Speaker {
   Future<void> speakEnglish(String text) => _say(text, 'en-US', 0.5);
 
   @override
+  Future<void> speakIn(String text, String locale, {bool slow = false}) =>
+      _say(text, locale, slow ? 0.3 : 0.45);
+
+  @override
+  Future<bool> hasVoiceFor(String locale) async {
+    if (!_ready) return false;
+    try {
+      return await _isAvailable(locale);
+    } on Object catch (_) {
+      return false;
+    }
+  }
+
+  @override
   Future<void> stop() async {
     _token++;
     _speaking.value = false;
@@ -157,6 +178,13 @@ class SilentSpeaker implements Speaker {
 
   @override
   Future<void> speakEnglish(String text) async {}
+
+  @override
+  Future<void> speakIn(String text, String locale, {bool slow = false}) async =>
+      spoken.add(text);
+
+  @override
+  Future<bool> hasVoiceFor(String locale) async => false;
 
   @override
   Future<void> stop() async {}

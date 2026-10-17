@@ -54,4 +54,5 @@ flutter:
     - assets/content/de/sentences.json
     - assets/content/de/grammar.json
     - assets/content/de/levels/
+    - assets/speak/
     - assets/licenses/

@@ -105,18 +105,19 @@ class ProgressNotifier extends AsyncNotifier<ProgressSnapshot> {
   /// Saves everything a lesson or review session produced.
   Future<void> saveSession(SessionResult r) async {
     final today = ref.today;
+    final lang = r.language ?? _lang;
     if (r.outcomes.isNotEmpty) {
-      await _repo.recordLearning(_lang, today, r.outcomes);
+      await _repo.recordLearning(lang, today, r.outcomes);
     }
     if (r.correctByWord.isNotEmpty) {
-      await _repo.recordReviews(_lang, today, r.correctByWord);
+      await _repo.recordReviews(lang, today, r.correctByWord);
     }
     for (final ch in r.charactersWritten) {
-      await _repo.recordCharacterWritten(_lang, ch, today);
+      await _repo.recordCharacterWritten(lang, ch, today);
     }
     final lessonDone = r.completed && r.lessonId != null;
     if (lessonDone) {
-      await _repo.completeLesson(_lang, r.lessonId!, r.stars, today);
+      await _repo.completeLesson(lang, r.lessonId!, r.stars, today);
     }
     await _repo.addStudy(
       today,

@@ -33,6 +33,7 @@ makeContainer({
   DateTime? start,
   String language = 'zh',
   List<Override> extraOverrides = const [],
+  ScriptedListener? listener,
 }) async {
   SharedPreferences.setMockInitialValues({
     'onboardingDone': onboardingDone,
@@ -54,7 +55,7 @@ makeContainer({
       clockProvider.overrideWith((ref) => time.clock),
       speakerProvider.overrideWithValue(SilentSpeaker()),
       voiceListenerProvider.overrideWithValue(
-        ScriptedListener(isAvailable: false),
+        listener ?? ScriptedListener(isAvailable: false),
       ),
       ...extraOverrides,
     ],

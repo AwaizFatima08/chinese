@@ -9,10 +9,24 @@ enum ListenFailure { unavailable, noSpeech, error }
 /// Result of one listening attempt.
 @immutable
 class ListenResult {
-  const ListenResult.heard(this.text) : failure = null;
-  const ListenResult.failed(this.failure) : text = '';
+  const ListenResult.heard(
+    this.text, {
+    this.confidence = 0,
+    this.alternatives = const [],
+  }) : failure = null;
+  const ListenResult.failed(this.failure)
+    : text = '',
+      confidence = 0,
+      alternatives = const [];
 
   final String text;
+
+  /// The recogniser's own confidence, 0..1, or 0 when it did not give one.
+  final double confidence;
+
+  /// Other transcriptions the recogniser considered, best first (excluding
+  /// [text]).
+  final List<String> alternatives;
   final ListenFailure? failure;
   bool get ok => failure == null;
 }
@@ -41,6 +55,14 @@ class DeviceVoiceListener implements VoiceListener {
   String _localeId = 'zh_CN';
   Completer<ListenResult>? _pending;
   String _last = '';
+  double _confidence = 0;
+  List<String> _alternatives = const [];
+
+  ListenResult _heard() => ListenResult.heard(
+    _last,
+    confidence: _confidence,
+    alternatives: _alternatives,
+  );
 
   @override
   bool get available => _available;
@@ -53,7 +75,7 @@ class DeviceVoiceListener implements VoiceListener {
           debugPrint('STT error: ${e.errorMsg}');
           _finish(
             _last.isNotEmpty
-                ? ListenResult.heard(_last)
+                ? _heard()
                 : const ListenResult.failed(ListenFailure.noSpeech),
           );
         },
@@ -61,7 +83,7 @@ class DeviceVoiceListener implements VoiceListener {
           if (status == 'done' || status == 'notListening') {
             _finish(
               _last.isNotEmpty
-                  ? ListenResult.heard(_last)
+                  ? _heard()
                   : const ListenResult.failed(ListenFailure.noSpeech),
             );
           }
@@ -99,17 +121,24 @@ class DeviceVoiceListener implements VoiceListener {
     }
     await cancel();
     _last = '';
+    _confidence = 0;
+    _alternatives = const [];
     final completer = _pending = Completer<ListenResult>();
     try {
       await _stt.listen(
         onResult: (r) {
           _last = r.recognizedWords;
+          if (r.hasConfidenceRating) _confidence = r.confidence;
+          _alternatives = [
+            for (final a in r.alternates.skip(1))
+              if (a.recognizedWords.isNotEmpty) a.recognizedWords,
+          ];
           onPartial?.call(_last);
           if (r.finalResult) {
             _finish(
               _last.isEmpty
                   ? const ListenResult.failed(ListenFailure.noSpeech)
-                  : ListenResult.heard(_last),
+                  : _heard(),
             );
           }
         },
@@ -130,7 +159,7 @@ class DeviceVoiceListener implements VoiceListener {
       limit + const Duration(seconds: 4),
       onTimeout: () => _last.isEmpty
           ? const ListenResult.failed(ListenFailure.noSpeech)
-          : ListenResult.heard(_last),
+          : _heard(),
     );
   }
 

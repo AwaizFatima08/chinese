@@ -93,6 +93,11 @@ class _HomeShellState extends ConsumerState<HomeShell>
             label: l.navPath,
           ),
           NavigationDestination(
+            icon: const Icon(Icons.record_voice_over_outlined),
+            selectedIcon: const Icon(Icons.record_voice_over_rounded),
+            label: l.navSpeak,
+          ),
+          NavigationDestination(
             icon: const Icon(Icons.insights_outlined),
             selectedIcon: const Icon(Icons.insights_rounded),
             label: l.navProgress,
