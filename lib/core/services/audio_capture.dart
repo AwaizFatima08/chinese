@@ -20,6 +20,7 @@ class Endpointer {
 
   double _time = 0;
   double _floor = double.infinity;
+  double _peak = 0;
   double _speechFor = 0;
   double _silentFor = 0;
   bool _started = false;
@@ -37,8 +38,11 @@ class Endpointer {
       _floor = math.min(_floor, rms);
       return false;
     }
-    final threshold = math.max(0.015, _floor * 3);
+    // Speech must stand clear of the room (3x the quietest start) and, once
+    // heard, of itself: a pause is anything under a fifth of the loudest part.
+    final threshold = math.max(0.015, math.max(_floor * 3, _peak * 0.2));
     if (rms >= threshold) {
+      _peak = math.max(_peak, rms);
       _speechFor += seconds;
       _silentFor = 0;
       if (_speechFor >= 0.15) _started = true;
