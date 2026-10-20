@@ -1,31 +1,30 @@
-# Flutter / Dart
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.packages
-.pub-cache/
-.pub/
-build/
-*.iml
-.idea/
-lib/l10n/app_localizations*.dart
-android/.gradle/
-android/local.properties
+
 android/app/debug
+android/app/google-services.json
 android/app/profile
 android/app/release
-android/key.properties
+android/.gradle/
 android/gradle/wrapper/gradle-wrapper.jar
-.secrets/
-
+android/key.properties
+android/local.properties
+build/
+.dart_tool/
+data/raw/
+.DS_Store
+# Firebase config for this project (kept out of git; see docs/firebase.md)
+# Flutter / Dart
+.flutter-plugins
+.flutter-plugins-dependencies
+.idea/
+*.iml
+*.jks
+*.keystore
+lib/l10n/app_localizations*.dart
+# OS
+.packages
+.pub/
+.pub-cache/
 # Release artifacts and raw source data (re-fetch with scripts/fetch_sources.sh)
 releases/
-data/raw/
-*.keystore
-*.jks
-
-# OS
-.DS_Store
-
-# Firebase config for this project (kept out of git; see docs/firebase.md)
-android/app/google-services.json
+.secrets/
+.venv/
